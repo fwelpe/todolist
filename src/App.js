@@ -1,17 +1,31 @@
 import React from 'react';
 import './App.css';
 import Header from './components/Header.js';
-import MainContent from './components/MainContent.js';
 import Footer from './components/Footer.js';
+import todosData from './todosData'
+import TodoItem from './TodoItem'
 
-function App() {
-  return (
-    <div>
-      <Header />
-      <MainContent />
-      <Footer />
-    </div>
-  );
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      todos: todosData
+    }
+  }
+
+  render() {
+    const todoItems = this.state.todos.map(item => <TodoItem key={item.id} item={item} />)
+
+    return (
+      <div>
+        <Header />
+        <div className="todo-list">
+          {todoItems}
+        </div>
+        <Footer />
+      </div>
+    )
+  }
 }
 
 export default App;
