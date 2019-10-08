@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "graphql": "^14.5.8",
+    "mysql": "^2.17.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-redux": "^7.1.1",
