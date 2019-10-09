@@ -4,6 +4,7 @@ import Header from './components/Header.js';
 import Footer from './components/Footer.js';
 import todosData from './todosData'
 import TodoItem from './TodoItem'
+import AddForm from './AddForm'
 
 
 class App extends React.Component {
@@ -57,6 +58,7 @@ class App extends React.Component {
       <div>
         <Header />
         <div className="todo-list">
+          <AddForm />
           {todoItems}
         </div>
         <Footer />
