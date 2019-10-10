@@ -5,11 +5,22 @@ const NameForm = () => {
 
     const handleChange = (event) => todoSet(event.target.value);
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const todoData = {
+            todo: todo,
+            completed: false
+        }
+        const newTodolist = localStorage.getItem('todolist') || [];
+        newTodolist.push(todoData);
+        localStorage.setItem('todolist', newTodolist);
+    }
+
     return (
-        <form>
+        <form onSubmit = {handleSubmit}>
             <label>
                 Новая задача:
-            <input type="text" value={todo} onChange={handleChange} />
+            <input type="text" onChange={handleChange} />
             </label>
             <input type="submit" value="Отправить" />
         </form>

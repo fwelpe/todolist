@@ -7,7 +7,7 @@ import TodoItem from './TodoItem'
 import AddForm from './AddForm'
 
 
-class App extends React.Component {
+/* class App extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -32,23 +32,21 @@ class App extends React.Component {
   }
 
   getData() {
-    var mysql = require('mysql')
-    var connection = mysql.createConnection({
-      host: '95.165.129.236',
-      user: 'root',
-      password: 'ewe4',
-      database: 'gru'
-    });
+    const data = {
+      l: 'root',
+      p: 'ewe4',
+      req: 'insert into todolist (todo) values ("vsdf")'
+    }
 
-    connection.connect()
-
-    connection.query('SELECT * FROM users', function (err, rows, fields) {
-      if (err) throw err
-
-      console.log('The solution is: ', rows)
+    fetch('http://95.165.129.236:8080/r.php', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify(data)
     })
 
-    connection.end()
   }
 
   render() {
@@ -65,6 +63,20 @@ class App extends React.Component {
       </div>
     )
   }
+} */
+
+const App = () => {
+  const todoItems = localStorage.getItem('todolist').map((item) => <TodoItem item={item} />);
+
+  return (
+    <div>
+      <Header />
+      <div className="todo-list">
+        <AddForm />
+      </div>
+      <Footer />
+    </div>
+  )
 }
 
 export default App;
