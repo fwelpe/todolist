@@ -24,10 +24,12 @@ class NameForm extends React.Component {
 
         fetch('http://95.165.129.236:8080/r.php', {
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Accept': '*',
+                'Content-Type': '*'
             },
             method: "POST",
+            // dataType: 'json',
+            responseType:'application/json',
             mode: 'no-cors',
             body: JSON.stringify(data)
         })
