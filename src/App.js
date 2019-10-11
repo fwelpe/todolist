@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import Header from './components/Header.js';
 import Footer from './components/Footer.js';
+import todosData from './todosData'
 import TodoItem from './TodoItem'
 import AddForm from './AddForm'
 
@@ -67,9 +68,9 @@ import AddForm from './AddForm'
 const App = () => {
   // const todoItems = JSON.parse(localStorage.todolist).keys.reduce((acc, val) => [...acc, <TodoItem item={localStorage['todolist'].val} />], []);
   const todosObj = JSON.parse(localStorage.getItem('todolist'));
-  const [ todoItems, todoItemsRenew ] = useState([]);
+  const todoItems = [];
   for (let keyIter in todosObj) {
-    useState([...todoItems, <TodoItem item={todosObj[keyIter]} />])
+    todoItems.push(<TodoItem item={todosObj[keyIter]} />);
   }
 
   return (
