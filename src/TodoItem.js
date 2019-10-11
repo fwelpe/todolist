@@ -9,7 +9,7 @@ function TodoItem(props) {
 
     return (
         <div className="todo-item">
-            <input type="checkbox" checked={props.item.completed} onChange={() => props.handleChange(props.item.id)} />
+            <input type="checkbox" checked={props.item.completed} />
             <p style={props.item.completed ? completedStyle : null}>{props.item.todo}</p>
         </div>
     )
