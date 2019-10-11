@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import Header from './Header.js';
 import TodoItem from './TodoItem'
 import AddForm from './AddForm'
-
 
 /* class App extends React.Component {
   constructor() {
@@ -64,12 +63,13 @@ import AddForm from './AddForm'
 } */
 
 const App = () => {
-  // const todoItems = JSON.parse(localStorage.todolist).keys.reduce((acc, val) => [...acc, <TodoItem item={localStorage['todolist'].val} />], []);
-  const todosObj = JSON.parse(localStorage.getItem('todolist'));
-  const todoItems = [];
-  for (let keyIter in todosObj) {
-    todoItems.push(<TodoItem item={todosObj[keyIter]} />);
-  }
+  useEffect(() => {
+    const todosObj = JSON.parse(localStorage.getItem('todolist'));
+    const todoItems = [];
+    for (let keyIter in todosObj) {
+      todoItems.push(<TodoItem item={todosObj[keyIter]} />);
+    }
+  }, [ localStorage.getItem('todolist') ])
 
   return (
     <div>
