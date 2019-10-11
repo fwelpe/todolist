@@ -1,8 +1,6 @@
 import React from 'react';
 import './App.css';
-import Header from './components/Header.js';
-import Footer from './components/Footer.js';
-import todosData from './todosData'
+import Header from './Header.js';
 import TodoItem from './TodoItem'
 import AddForm from './AddForm'
 
@@ -80,7 +78,6 @@ const App = () => {
         <AddForm />
         {todoItems}
       </div>
-      <Footer />
     </div>
   )
 }

@@ -7,12 +7,12 @@ const AddForm = () => {
     const handleChange = (event) => todoSet(event.target.value)
 
     const getNewIndex = () => {
-        const keys = Object.keys(newTodosObj)
+        const ids = Object.keys(newTodosObj)
         const getIndex = (acc, val) => {
             const numVal = Number(val)
             return numVal >= acc ? numVal + 1 : acc
         }
-        return keys.reduce(getIndex, 0)
+        return ids.reduce(getIndex, 0)
     }
 
     const handleSubmit = (event) => {
