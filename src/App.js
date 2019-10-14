@@ -3,16 +3,26 @@ import './App.css';
 import Header from './Header.js';
 import TodoItem from './TodoItem'
 
+
 const App = () => {
 	const [todo, todoSet] = useState('')
 	const handleChange = (event) => todoSet(event.target.value)
-
+	
+	const changeDone = (id, todo) => {
+		const newTodosObj = JSON.parse(localStorage.getItem('todolist'))
+		// console.log(newTodosObj)
+		// console.log(id)
+		// console.log(newTodosObj[id])
+		newTodosObj[id]['completed'] = !newTodosObj[id]['completed']
+		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		setTodoItems(getTodoArr())
+	}
 	const getTodoArr = () => {
 		const todoItemsArr = [];
 		if (localStorage.todolist) {
 			const todosObj = JSON.parse(localStorage.todolist);
 			for (let keyIter in todosObj) {
-				todoItemsArr.push(<TodoItem item={todosObj[keyIter]} />);
+				todoItemsArr.push(<TodoItem key={keyIter} id={keyIter} item={todosObj[keyIter]} changeDone={changeDone} />);
 			}
 		}
 		return todoItemsArr;
@@ -31,7 +41,7 @@ const App = () => {
 			return ids.reduce(getIndex, 0)
 		}
 		const newIndex = getNewIndex()
-		setTodoItems([...todoItems, <TodoItem key={newIndex} item={todoObj} />])
+		setTodoItems([...todoItems, <TodoItem key={newIndex} id={newIndex} item={todoObj} changeDone={changeDone} />])
 		newTodosObj[newIndex] = todoObj
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 	}
