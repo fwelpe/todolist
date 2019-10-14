@@ -63,31 +63,31 @@ import AddForm from './AddForm'
 } */
 
 function App() {
-  function getTodoArr() {
-    const todoItemsArr = [];
-    const todosObj = JSON.parse(localStorage.todolist);
-    for (let keyIter in todosObj) {
-      todoItemsArr.push(<TodoItem item={todosObj[keyIter]} />);
-    }
-    return todoItemsArr;
-  }
+	const [todoItems, setTodoItems] = useState([]);
+	
+	useEffect(() => {
+		const todoItemsArr = [];
+		const todosObj = JSON.parse(localStorage.todolist);
+		for (let keyIter in todosObj) {
+			todoItemsArr.push(<TodoItem item={todosObj[keyIter]} />);
+		}
+		setTodoItems(todoItemsArr);
+	}, [ todoItems ])
 
-  const [todoItems, todoItemsUpd] = useState(getTodoArr());
 
-  function updateTodo(newTodoObj) {
-    todoItemsUpd([...todoItems, <TodoItem item={newTodoObj} />])
+	function updateTodo(newTodoObj) {
+		// setTodoItems([...todoItems, <TodoItem item={newTodoObj} />])
+	}
 
-  }
-
-  return (
-    <div>
-      <Header />
-      <div className="todo-list">
-        <AddForm handleSubmit={updateTodo} />
-        {todoItems}
-      </div>
-    </div>
-  )
+	return (
+		<div>
+			<Header />
+			<div className="todo-list">
+				<AddForm handleSubmit={updateTodo} />
+				{todoItems}
+			</div>
+		</div>
+	)
 }
 
 export default App;

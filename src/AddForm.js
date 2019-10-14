@@ -41,7 +41,7 @@ export default function (props) {
     const handleChange = (event) => todoSet(event.target.value)
 
     return (
-        <form onSubmit={props.handleSubmit({ todo: todo, completed: false })}>
+        <form onSubmit={props.handleSubmit([...props.todoItems, { todo: todo, completed: false }])}>
             <label>
                 Новая задача:
             <input type="text" onChange={handleChange} />
