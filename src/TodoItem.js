@@ -1,6 +1,6 @@
 import React from "react"
 
-function TodoItem(props) {
+const TodoItem = (props) => {
     const completedStyle = {
         fontStyle: "italic",
         color: "#cdcdcd",
