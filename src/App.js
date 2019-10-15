@@ -15,13 +15,11 @@ const App = () => {
 		setTodoItems(getTodoArr())
 	}
 	const getTodoArr = () => {
-		const todoItemsArr = [];
-		if (localStorage.todolist) {
-			const todosObj = JSON.parse(localStorage.todolist);
-			for (let keyIter in todosObj) {
-				todoItemsArr.push(<TodoItem key={keyIter} id={keyIter} item={todosObj[keyIter]} changeDone={changeDone} />);
-			}
+		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {}
+		const createJSX = (v) => {
+			return <TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} />
 		}
+		const todoItemsArr = Object.keys(todoObj).map(createJSX)
 		return todoItemsArr;
 	}
 
