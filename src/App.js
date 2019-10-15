@@ -8,11 +8,8 @@ const App = () => {
 	const [todo, todoSet] = useState('')
 	const handleChange = (event) => todoSet(event.target.value)
 	
-	const changeDone = (id, todo) => {
+	const changeDone = (id) => {
 		const newTodosObj = JSON.parse(localStorage.getItem('todolist'))
-		// console.log(newTodosObj)
-		// console.log(id)
-		// console.log(newTodosObj[id])
 		newTodosObj[id]['completed'] = !newTodosObj[id]['completed']
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 		setTodoItems(getTodoArr())
@@ -31,6 +28,8 @@ const App = () => {
 	const [todoItems, setTodoItems] = useState(getTodoArr());
 
 	const newTodo = (todoObj) => {
+		if (!todoObj.todo)
+			return
 		const newTodosObj = JSON.parse(localStorage.getItem('todolist')) || {}
 		const getNewIndex = () => {
 			const ids = Object.keys(newTodosObj)
