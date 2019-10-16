@@ -12,7 +12,7 @@ const TodoItem = (props) => {
 		<div className="todo-item">
 			<input type="checkbox" checked={props.item.completed} onChange={() => props.changeDone(props.id)} />
 			<p style={props.item.completed ? completedStyle : null}>{props.item.todo}</p>
-			<Button id="delBtn" close />
+			<Button onClick={() => props.delTodo(props.id)} className="delBtn" close />
 		</div>
 	)
 }

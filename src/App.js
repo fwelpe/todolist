@@ -8,17 +8,24 @@ import TodoItem from './TodoItem'
 const App = () => {
 	const [todo, todoSet] = useState('')
 	const handleChange = (event) => todoSet(event.target.value)
-	
+
 	const changeDone = (id) => {
 		const newTodosObj = JSON.parse(localStorage.getItem('todolist'))
 		newTodosObj[id]['completed'] = !newTodosObj[id]['completed']
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 		setTodoItems(getTodoArr())
 	}
+	const delTodo = (id) => {
+		let newTodosObj = JSON.parse(localStorage.getItem('todolist'))
+		delete newTodosObj[id]
+		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		setTodoItems(getTodoArr())
+	}
+
 	const getTodoArr = () => {
 		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {}
 		const createJSX = (v) => {
-			return <TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} />
+			return <TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} />
 		}
 		const todoItemsArr = Object.keys(todoObj).map(createJSX)
 		return todoItemsArr;
@@ -39,7 +46,7 @@ const App = () => {
 			return ids.reduce(getIndex, 0)
 		}
 		const newIndex = getNewIndex()
-		setTodoItems([...todoItems, <TodoItem key={newIndex} id={newIndex} item={todoObj} changeDone={changeDone} />])
+		setTodoItems([...todoItems, <TodoItem key={newIndex} id={newIndex} item={todoObj} changeDone={changeDone} delTodo={delTodo} />])
 		newTodosObj[newIndex] = todoObj
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 	}
