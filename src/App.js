@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Label, Input, FormGroup, Form } from 'reactstrap'
-import DateTimePicker from 'react-datetime-picker'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 import './css/bootstrap.css';
 import Header from './Header.js';
 import TodoItem from './TodoItem';
 
 const App = () => {
-	const dateToFormat = '1976-04-19T12:59-0500';
 	const [todo, todoSet] = useState('')
 	const handleChangeTodo = (event) => todoSet(event.target.value)
 	const [type, typeSet] = useState(0)
@@ -58,6 +59,8 @@ const App = () => {
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 	}
 
+	const [date, setDate] = useState();
+
 	return (
 		<div>
 			<Header />
@@ -74,11 +77,11 @@ const App = () => {
 						</Input>
 					</FormGroup>
 					<FormGroup>
-					<Label>Deadline</Label>
-						<Input type="date" />
-						<DateTimePicker />
+						<Label>Deadline</Label>
+						<DatePicker selected={date} onChange={setDate} />
 					</FormGroup>
 					<FormGroup>
+						<Input type="submit" value="Отправить" />
 					</FormGroup>
 				</Form>
 				{todoItems}
