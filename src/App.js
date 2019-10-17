@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Label, Input, FormGroup, Form } from 'reactstrap'
-import DatePicker from "react-datepicker";
+import DateTimePicker from 'react-datetime-picker';
 import "react-datepicker/dist/react-datepicker.css";
-
 
 import './css/bootstrap.css';
 import Header from './Header.js';
@@ -11,10 +10,12 @@ import TodoItem from './TodoItem';
 const App = () => {
 	const [todo, todoSet] = useState('')
 	const handleChangeTodo = (event) => todoSet(event.target.value)
+	const [desc, descSet] = useState('')
+	const handleChangeDesc = (event) => descSet(event.target.value)
 	const [type, typeSet] = useState(0)
 	const handleChangeType = (event) => typeSet(event.target.value)
 	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill']
-	const todoTypes = todoTypesArr.map((v, index) => (<option value={Number(index)}> {v} </option>))
+	const todoTypes = todoTypesArr.map((v, index) => (<option value={Number(index)} key={Number(index)}> {v} </option>))
 
 	const changeDone = (id) => {
 		const newTodosObj = JSON.parse(localStorage.getItem('todolist'))
@@ -59,16 +60,20 @@ const App = () => {
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 	}
 
-	const [date, setDate] = useState();
+	const [date, setDate] = useState(new Date());
 
 	return (
 		<div>
 			<Header />
 			<div className="todo-list">
-				<Form onSubmit={(event) => { event.preventDefault(); newTodo({ todo: todo, completed: false, type: type }) }}>
-					<FormGroup>
+				<Form onSubmit={(event) => { event.preventDefault(); newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc }) }}>
+				<FormGroup>
 						<Label>Todo Name</Label>
 						<Input type="text" onChange={handleChangeTodo} />
+					</FormGroup>
+					<FormGroup>
+						<Label>Description (optional)</Label>
+						<Input type="text" onChange={handleChangeDesc} />
 					</FormGroup>
 					<FormGroup>
 						<Label for="exampleSelect">Todo Type</Label>
@@ -78,10 +83,10 @@ const App = () => {
 					</FormGroup>
 					<FormGroup>
 						<Label>Deadline</Label>
-						<DatePicker selected={date} onChange={setDate} />
+						<DateTimePicker onChange={setDate} value={date} />
 					</FormGroup>
 					<FormGroup>
-						<Input type="submit" value="Отправить" />
+						<Input type="submit" value="Add New" />
 					</FormGroup>
 				</Form>
 				{todoItems}
