@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Label, Input, FormGroup, Form } from 'reactstrap'
+import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import DateTimePicker from 'react-datetime-picker';
 import "react-datepicker/dist/react-datepicker.css";
+// import $ from 'jquery';
 
 import './css/bootstrap.css';
 import Header from './Header.js';
@@ -62,33 +63,52 @@ const App = () => {
 
 	const [date, setDate] = useState(new Date());
 
+	const [modal, setModal] = useState(false);
+	const sbmt = (event) => {
+		// event.preventDefault();
+		newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc });
+	}
+	const toggle = () => {
+		setModal(!modal);
+	}
+
 	return (
 		<div>
 			<Header />
 			<div className="todo-list">
-				<Form onSubmit={(event) => { event.preventDefault(); newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc }) }}>
-				<FormGroup>
-						<Label>Todo Name</Label>
-						<Input type="text" onChange={handleChangeTodo} />
-					</FormGroup>
-					<FormGroup>
-						<Label>Description (optional)</Label>
-						<Input type="text" onChange={handleChangeDesc} />
-					</FormGroup>
-					<FormGroup>
-						<Label for="exampleSelect">Todo Type</Label>
-						<Input type="select" name="select" id="exampleSelect" onChange={handleChangeType}>
-							{todoTypes}
-						</Input>
-					</FormGroup>
-					<FormGroup>
-						<Label>Deadline</Label>
-						<DateTimePicker onChange={setDate} value={date} />
-					</FormGroup>
-					<FormGroup>
-						<Input type="submit" value="Add New" />
-					</FormGroup>
-				</Form>
+				<Button color="info" onClick={toggle}>+</Button>
+				<Modal isOpen={modal} toggle={toggle}>
+					<ModalHeader toggle={toggle}>Modal title</ModalHeader>
+					<ModalBody>
+						<Form id='add' onSubmit={sbmt}>
+							<FormGroup>
+								<Label>Todo Name</Label>
+								<Input className="check" type="text" onChange={handleChangeTodo} required />
+							</FormGroup>
+							<FormGroup>
+								<Label>Description (optional)</Label>
+								<Input type="text" onChange={handleChangeDesc} />
+							</FormGroup>
+							<FormGroup>
+								<Label for="exampleSelect">Todo Type</Label>
+								<Input type="select" name="select" id="exampleSelect" onChange={handleChangeType}>
+									{todoTypes}
+								</Input>
+							</FormGroup>
+							<FormGroup>
+								<Label>Deadline</Label>
+								<DateTimePicker className="check" onChange={setDate} value={date} />
+							</FormGroup>
+							{/* <FormGroup>
+								<Input type="submit" value="Add New" />
+							</FormGroup> */}
+						</Form>
+					</ModalBody>
+					<ModalFooter>
+						<Button color="primary" form='add' type="submit">Add New</Button>
+						<Button color="secondary" onClick={toggle}>Cancel</Button>
+					</ModalFooter>
+				</Modal>
 				{todoItems}
 			</div>
 		</div>

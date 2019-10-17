@@ -4,11 +4,11 @@ import Moment from 'react-moment';
 
 
 const TodoItem = (props) => {
-	const completedStyle = {
+	const completedStyle = props.item.completed ? {
 		fontStyle: "italic",
 		color: "#cdcdcd",
 		textDecoration: "line-through"
-	}
+	} : null
 	const yearNow = new Date().getFullYear();
 	const yearTodo = new Date(props.item.date).getFullYear();
 	const timeRegex = yearNow === yearTodo ? 'MMMM D' : "MMMM D, YYYY"
@@ -17,7 +17,11 @@ const TodoItem = (props) => {
 	return (
 		<div className="todo-item">
 			<input type="checkbox" checked={props.item.completed} onChange={() => props.changeDone(props.id)} />
-			<p style={props.item.completed ? completedStyle : null}>{props.item.todo} [{props.types[props.item.type]}]<p>{props.item.desc}</p>Deadline: {expires}</p>
+			<div>
+				<p style={completedStyle}>{props.item.todo} [{props.types[props.item.type]}]</p>
+				<p style={completedStyle}>{props.item.desc}</p>
+				<p style={completedStyle}>Deadline: {expires}</p>
+			</div>
 			<Button onClick={() => props.delTodo(props.id)} className="delBtn" close />
 		</div>
 	)
