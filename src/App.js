@@ -15,7 +15,7 @@ const App = () => {
 	const handleChangeDesc = (event) => descSet(event.target.value)
 	const [type, typeSet] = useState(0)
 	const handleChangeType = (event) => typeSet(event.target.value)
-	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill']
+	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill', 'Other']
 	const todoTypes = todoTypesArr.map((v, index) => (<option value={Number(index)} key={Number(index)}> {v} </option>))
 
 	const changeDone = (id) => {
@@ -77,30 +77,27 @@ const App = () => {
 			<div className="todo-list">
 				<Button color="info" onClick={toggle}>+</Button>
 				<Modal isOpen={modal} toggle={toggle}>
-					<ModalHeader toggle={toggle}>Modal title</ModalHeader>
+					<ModalHeader toggle={toggle}>New Todo</ModalHeader>
 					<ModalBody>
 						<Form id='add' onSubmit={sbmt}>
 							<FormGroup>
-								<Label>Todo Name</Label>
-								<Input className="check" type="text" onChange={handleChangeTodo} required />
+								<Label>Name</Label>
+								<Input type="text" onChange={handleChangeTodo} required />
 							</FormGroup>
 							<FormGroup>
 								<Label>Description (optional)</Label>
 								<Input type="text" onChange={handleChangeDesc} />
 							</FormGroup>
 							<FormGroup>
-								<Label for="exampleSelect">Todo Type</Label>
+								<Label for="exampleSelect">Type</Label>
 								<Input type="select" name="select" id="exampleSelect" onChange={handleChangeType}>
 									{todoTypes}
 								</Input>
 							</FormGroup>
 							<FormGroup>
 								<Label>Deadline</Label>
-								<DateTimePicker className="check" onChange={setDate} value={date} />
+								<DateTimePicker required onChange={setDate} value={date} />
 							</FormGroup>
-							{/* <FormGroup>
-								<Input type="submit" value="Add New" />
-							</FormGroup> */}
 						</Form>
 					</ModalBody>
 					<ModalFooter>
