@@ -64,12 +64,11 @@ const App = () => {
 	const [date, setDate] = useState(new Date());
 
 	const [modal, setModal] = useState(false);
+	const toggle = () => setModal(!modal);
 	const sbmt = (event) => {
-		// event.preventDefault();
+		event.preventDefault();
 		newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc });
-	}
-	const toggle = () => {
-		setModal(!modal);
+		toggle();
 	}
 
 	return (
