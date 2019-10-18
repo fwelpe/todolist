@@ -15,23 +15,11 @@ const App = () => {
 	const handleChangeDesc = (event) => descSet(event.target.value)
 	const [type, typeSet] = useState(0)
 	const handleChangeType = (event) => typeSet(event.target.value)
+	const [date, setDate] = useState(new Date());
+
 	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill', 'Other']
 	const todoTypes = todoTypesArr.map((v, index) => (<option value={Number(index)} key={Number(index)}> {v} </option>))
-
-	const changeDone = (id) => {
-		const newTodosObj = JSON.parse(localStorage.getItem('todolist'))
-		newTodosObj[id]['completed'] = !newTodosObj[id]['completed']
-		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
-		setTodoItems(getTodoArr())
-	}
-
-	const delTodo = (id) => {
-		let newTodosObj = JSON.parse(localStorage.getItem('todolist'))
-		delete newTodosObj[id]
-		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
-		setTodoItems(getTodoArr())
-	}
-
+	
 	const getTodoArr = () => {
 		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {}
 		const createJSX = (v) => {
@@ -40,12 +28,25 @@ const App = () => {
 		const todoItemsArr = Object.keys(todoObj).map(createJSX)
 		return todoItemsArr
 	}
-
-	const [todoItems, setTodoItems] = useState(getTodoArr());
-
+	
+	
+	const changeDone = (id) => {
+		const newTodosObj = JSON.parse(localStorage.getItem('todolist'))
+		newTodosObj[id]['completed'] = !newTodosObj[id]['completed']
+		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		setTodoItems(getTodoArr())
+	}
+	
+	const delTodo = (id) => {
+		let newTodosObj = JSON.parse(localStorage.getItem('todolist'))
+		delete newTodosObj[id]
+		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		setTodoItems(getTodoArr())
+	}
+	
 	const newTodo = (todoObj) => {
 		if (!todoObj.todo)
-			return
+		return
 		const newTodosObj = JSON.parse(localStorage.getItem('todolist')) || {}
 		const getNewIndex = () => {
 			const ids = Object.keys(newTodosObj)
@@ -59,9 +60,13 @@ const App = () => {
 		setTodoItems([...todoItems, <TodoItem key={newIndex} id={newIndex} item={todoObj} changeDone={changeDone} delTodo={delTodo} types={todoTypesArr} />])
 		newTodosObj[newIndex] = todoObj
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		todoSet('');
+		descSet('');
+		typeSet(0);
+		setDate(new Date());
 	}
-
-	const [date, setDate] = useState(new Date());
+	
+	const [todoItems, setTodoItems] = useState(getTodoArr());
 
 	const [modal, setModal] = useState(false);
 	const toggle = () => setModal(!modal);
@@ -70,7 +75,7 @@ const App = () => {
 		newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc });
 		toggle();
 	}
-
+	
 	return (
 		<div>
 			<Header />
