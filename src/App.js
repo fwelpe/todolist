@@ -17,6 +17,7 @@ const App = () => {
 	const [date, setDate] = useState(new Date());
 	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill']
 	const todoTypes = todoTypesArr.map((v, index) => ({ label: v, key: index }))
+	const [id, setId] = useState(false)
 
 	const getTodoArr = () => {
 		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {}
@@ -46,7 +47,8 @@ const App = () => {
 		todoSet(item.todo);
 		descSet(item.desc);
 		typeSet(item.type);
-		setDate(item.date);
+		setDate(new Date(item.date));
+		setId(id);
 	}
 
 	const reset = () => {
@@ -54,6 +56,7 @@ const App = () => {
 		descSet('');
 		typeSet(todoTypesArr[0]);
 		setDate(new Date());
+		setId(false);
 	}
 
 	const newTodo = (todoObj) => {
@@ -66,7 +69,7 @@ const App = () => {
 			}
 			return ids.reduce(getIndex, 0)
 		}
-		const newIndex = getNewIndex();
+		const newIndex = id ? id : getNewIndex();
 		newTodosObj[newIndex] = todoObj;
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 		setTodoItems(getTodoArr());
