@@ -18,7 +18,7 @@ const TodoItem = (props) => {
 		<div className="todo-item">
 			<input type="checkbox" checked={props.item.completed} onChange={() => props.changeDone(props.id)} />
 			<div>
-				<p style={completedStyle}>{props.item.todo} [{props.types[props.item.type]}]</p>
+				<p style={completedStyle}>{props.item.todo} [{props.item.type}]</p>
 				<p style={completedStyle}>{props.item.desc}</p>
 				<p style={completedStyle}>Deadline: {expires}</p>
 			</div>
