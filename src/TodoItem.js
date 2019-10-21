@@ -7,11 +7,11 @@ const TodoItem = (props) => {
 		fontStyle: "italic",
 		color: "#cdcdcd",
 		textDecoration: "line-through"
-	} : null
+	} : null;
 	const yearNow = new Date().getFullYear();
 	const yearTodo = new Date(props.item.date).getFullYear();
-	const timeRegex = yearNow === yearTodo ? 'MMMM D' : "MMMM D, YYYY"
-	const expires = <Moment format={timeRegex}>{props.item.date}</Moment>
+	const timeRegex = yearNow === yearTodo ? 'MMMM D' : "MMMM D, YYYY";
+	const expires = <Moment format={timeRegex}>{props.item.date}</Moment>;
 
 	return (
 		<div className="todo-item">

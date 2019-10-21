@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import DateTimePicker from 'react-datetime-picker';
 import "react-datepicker/dist/react-datepicker.css";
+import DataListInput from 'react-datalist-input';
 // import $ from 'jquery';
 
 import './css/bootstrap.css';
@@ -14,19 +15,8 @@ const App = () => {
 	const [desc, descSet] = useState('')
 	const handleChangeDesc = (event) => descSet(event.target.value)
 	const [date, setDate] = useState(new Date());
-
-	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill', 'Other']
-	const todoTypes = todoTypesArr.map((v, index) =>
-		(<option value={todoTypesArr[Number(index)]} key={Number(index)}> {v} </option>))
-	const [style, setStyle] = useState({ visibility: 'hidden' })
-	const [type, typeSet] = useState(todoTypesArr[0])
-	const handleChangeType = (event) => {
-		if (event.target.value === 'Other')
-			setStyle({ visibility: 'visible' });
-		typeSet(event.target.value)
-	}
-	const [customType, setCustomType] = useState('');
-	const useCustomTypeF = (event) => setCustomType(event.target.value)
+	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill']
+	const todoTypes = todoTypesArr.map((v, index) => ({ label: v, key: index }))
 
 	const getTodoArr = () => {
 		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {}
@@ -52,10 +42,11 @@ const App = () => {
 	}
 
 	const changeTodo = (item, id) => {
-		const newTodosObj = JSON.parse(localStorage.getItem('todolist'));
-		todoSet(item.todo)
-		console.log(item, id)
 		toggle();
+		todoSet(item.todo);
+		descSet(item.desc);
+		typeSet(item.type);
+		setDate(item.date);
 	}
 
 	const reset = () => {
@@ -63,8 +54,6 @@ const App = () => {
 		descSet('');
 		typeSet(todoTypesArr[0]);
 		setDate(new Date());
-		setCustomType('')
-		setStyle({ visibility: 'hidden' })
 	}
 
 	const newTodo = (todoObj) => {
@@ -73,7 +62,7 @@ const App = () => {
 			const ids = Object.keys(newTodosObj)
 			const getIndex = (acc, val) => {
 				const numVal = Number(val)
-				return numVal === acc ? numVal + 1 : acc
+				return numVal >= acc ? numVal + 1 : acc
 			}
 			return ids.reduce(getIndex, 0)
 		}
@@ -85,14 +74,22 @@ const App = () => {
 	}
 
 	const [todoItems, setTodoItems] = useState(getTodoArr());
-
 	const [modal, setModal] = useState(false);
-	const toggle = () => setModal(!modal);
+	const toggle = () => {
+		reset();
+		setModal(!modal);
+	}
 	const sbmt = (event) => {
 		event.preventDefault();
-		newTodo({ todo: todo, completed: false, type: customType ? customType : type, date: date, desc: desc });
+		newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc });
 		toggle();
 	}
+	const [type, typeSet] = useState(todoTypesArr[0])
+	const handleSelectInput = (currentInput, item) => {
+		typeSet(currentInput);
+		return (item.label.substr(0, currentInput.length).toUpperCase() === currentInput.toUpperCase());
+	}
+	const handleChangeType = (event) => typeSet(event.label)
 
 	return (
 		<div>
@@ -113,10 +110,7 @@ const App = () => {
 							</FormGroup>
 							<FormGroup>
 								<Label for="exampleSelect">Type</Label>
-								<Input type="select" name="select" id="exampleSelect" onChange={handleChangeType}>
-									{todoTypes}
-								</Input>
-								<Input type="text" style={style} onChange={useCustomTypeF} />
+								<DataListInput required initialValue={type} items={todoTypes} onSelect={handleChangeType} match={handleSelectInput} />
 							</FormGroup>
 							<FormGroup>
 								<Label>Deadline</Label>
