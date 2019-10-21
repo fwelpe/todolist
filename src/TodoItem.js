@@ -2,7 +2,6 @@ import React from "react";
 import { Button } from 'reactstrap';
 import Moment from 'react-moment';
 
-
 const TodoItem = (props) => {
 	const completedStyle = props.item.completed ? {
 		fontStyle: "italic",
@@ -23,6 +22,7 @@ const TodoItem = (props) => {
 				<p style={completedStyle}>Deadline: {expires}</p>
 			</div>
 			<Button onClick={() => props.delTodo(props.id)} className="delBtn" close />
+			<Button onClick={() => props.changeTodo(props.item, props.id)} color='white'><img src="/71-512.png" width='15' alt='' /></Button>
 		</div>
 	)
 }

@@ -16,7 +16,8 @@ const App = () => {
 	const [date, setDate] = useState(new Date());
 
 	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill', 'Other']
-	const todoTypes = todoTypesArr.map((v, index) => (<option value={todoTypesArr[Number(index)]} key={Number(index)}> {v} </option>))
+	const todoTypes = todoTypesArr.map((v, index) =>
+		(<option value={todoTypesArr[Number(index)]} key={Number(index)}> {v} </option>))
 	const [style, setStyle] = useState({ visibility: 'hidden' })
 	const [type, typeSet] = useState(todoTypesArr[0])
 	const handleChangeType = (event) => {
@@ -30,7 +31,7 @@ const App = () => {
 	const getTodoArr = () => {
 		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {}
 		const createJSX = (v) => {
-			return <TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} />
+			return <TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} changeTodo={changeTodo} />
 		}
 		const todoItemsArr = Object.keys(todoObj).map(createJSX)
 		return todoItemsArr
@@ -50,28 +51,37 @@ const App = () => {
 		setTodoItems(getTodoArr())
 	}
 
-	const newTodo = (todoObj) => {
-		if (!todoObj.todo)
-			return
-		const newTodosObj = JSON.parse(localStorage.getItem('todolist')) || {}
-		const getNewIndex = () => {
-			const ids = Object.keys(newTodosObj)
-			const getIndex = (acc, val) => {
-				const numVal = Number(val)
-				return numVal >= acc ? numVal + 1 : acc
-			}
-			return ids.reduce(getIndex, 0)
-		}
-		const newIndex = getNewIndex()
-		setTodoItems([...todoItems, <TodoItem key={newIndex} id={newIndex} item={todoObj} changeDone={changeDone} delTodo={delTodo} />])
-		newTodosObj[newIndex] = todoObj
-		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+	const changeTodo = (item, id) => {
+		const newTodosObj = JSON.parse(localStorage.getItem('todolist'));
+		todoSet(item.todo)
+		console.log(item, id)
+		toggle();
+	}
+
+	const reset = () => {
 		todoSet('');
 		descSet('');
 		typeSet(todoTypesArr[0]);
 		setDate(new Date());
 		setCustomType('')
-		setStyle({ visibility: 'hidden'})
+		setStyle({ visibility: 'hidden' })
+	}
+
+	const newTodo = (todoObj) => {
+		const newTodosObj = JSON.parse(localStorage.getItem('todolist')) || {}
+		const getNewIndex = () => {
+			const ids = Object.keys(newTodosObj)
+			const getIndex = (acc, val) => {
+				const numVal = Number(val)
+				return numVal === acc ? numVal + 1 : acc
+			}
+			return ids.reduce(getIndex, 0)
+		}
+		const newIndex = getNewIndex();
+		newTodosObj[newIndex] = todoObj;
+		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		setTodoItems(getTodoArr());
+		reset();
 	}
 
 	const [todoItems, setTodoItems] = useState(getTodoArr());
@@ -95,11 +105,11 @@ const App = () => {
 						<Form id='add' onSubmit={sbmt}>
 							<FormGroup>
 								<Label>Name</Label>
-								<Input type="text" onChange={handleChangeTodo} required />
+								<Input type="text" value={todo} onChange={handleChangeTodo} required />
 							</FormGroup>
 							<FormGroup>
 								<Label>Description (optional)</Label>
-								<Input type="text" onChange={handleChangeDesc} />
+								<Input type="text" value={desc} onChange={handleChangeDesc} />
 							</FormGroup>
 							<FormGroup>
 								<Label for="exampleSelect">Type</Label>
