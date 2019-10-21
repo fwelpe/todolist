@@ -9,6 +9,21 @@ import './css/bootstrap.css';
 import Header from './Header.js';
 import TodoItem from './TodoItem';
 
+const sortTodo = (by) => {
+	const todoObj = JSON.parse(localStorage.getItem('todolist')) || {};
+	const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
+	let compareFn;
+	if (by === 'time')
+		compareFn = (left, right) => {
+			return (new Date(left.date) > new Date(right.date));
+		}
+	else if (by === 'type')
+		compareFn = (left, right) => {
+			return (left.type > right.type);
+		}
+	todoArr.sort(compareFn);
+}
+
 const App = () => {
 	const [todo, todoSet] = useState('')
 	const handleChangeTodo = (event) => todoSet(event.target.value)
@@ -21,11 +36,10 @@ const App = () => {
 
 	const getTodoArr = () => {
 		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {}
-		const createJSX = (v) => {
-			return <TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} changeTodo={changeTodo} />
-		}
-		const todoItemsArr = Object.keys(todoObj).map(createJSX)
-		return todoItemsArr
+		const createJSX = (v) =>
+			<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} changeTodo={changeTodo} />;
+		const todoItemsArr = Object.keys(todoObj).map(createJSX);
+		return todoItemsArr;
 	}
 
 	const changeDone = (id) => {
@@ -43,7 +57,7 @@ const App = () => {
 	}
 
 	const changeTodo = (item, id) => {
-		toggle();
+		setModal(true); // ??? не работает если вызывать обычный toggle
 		todoSet(item.todo);
 		descSet(item.desc);
 		typeSet(item.type);
@@ -81,6 +95,7 @@ const App = () => {
 	const toggle = () => {
 		reset();
 		setModal(!modal);
+		// console.log(modal)
 	}
 	const sbmt = (event) => {
 		event.preventDefault();
