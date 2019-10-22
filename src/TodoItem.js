@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, ButtonGroup } from 'reactstrap';
 import Moment from 'react-moment';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFlag, faTimesCircle, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
 const TodoItem = (props) => {
