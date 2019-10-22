@@ -9,20 +9,6 @@ import './css/bootstrap.css';
 import Header from './Header.js';
 import TodoItem from './TodoItem';
 
-const sortTodo = (by) => {
-	const todoObj = JSON.parse(localStorage.getItem('todolist')) || {};
-	const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
-	let compareFn;
-	if (by === 'time')
-		compareFn = (left, right) => {
-			return (new Date(left.date) > new Date(right.date));
-		}
-	else if (by === 'type')
-		compareFn = (left, right) => {
-			return (left.type > right.type);
-		}
-	todoArr.sort(compareFn);
-}
 
 const App = () => {
 	const [todo, todoSet] = useState('')
@@ -63,6 +49,7 @@ const App = () => {
 		typeSet(item.type);
 		setDate(new Date(item.date));
 		setId(id);
+		setImportant(!!item.important);
 	}
 
 	const reset = () => {
@@ -71,6 +58,7 @@ const App = () => {
 		typeSet(todoTypesArr[0]);
 		setDate(new Date());
 		setId(false);
+		setImportant(false);
 	}
 
 	const newTodo = (todoObj) => {
@@ -99,21 +87,54 @@ const App = () => {
 	}
 	const sbmt = (event) => {
 		event.preventDefault();
-		newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc });
+		newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc, important: important });
 		toggle();
 	}
 	const [type, typeSet] = useState(todoTypesArr[0])
+
+	const sortTodo = (by = 'obj') => {
+		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {};
+		const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
+		let compareFn;
+		if (by === 'time') {
+			compareFn = (left, right) => {
+				return (new Date(left['date']) - new Date(right['date']));
+			}
+		}
+		else if (by === 'type') {
+			compareFn = (left, right) => {
+				const lowerLeft = left.type.toLowerCase();
+				const lowerRight = right.type.toLowerCase();
+				return (lowerLeft.localeCompare(lowerRight));
+			}
+		}
+		todoArr.sort(compareFn);
+		const assembleObj = (acc, val, index) => {
+			acc[index] = val;
+			return acc;
+		}
+		const todoObjJSON = JSON.stringify(todoArr.reduce(assembleObj, {}));
+		localStorage.setItem('todolist', todoObjJSON);
+		setTodoItems(getTodoArr());
+	}
+
 	const handleSelectInput = (currentInput, item) => {
 		typeSet(currentInput);
 		return (item.label.substr(0, currentInput.length).toUpperCase() === currentInput.toUpperCase());
 	}
+
 	const handleChangeType = (event) => typeSet(event.label)
+
+	const [important, setImportant] = useState(false);
+	const toggleImportant = () => setImportant(!important);
 
 	return (
 		<div>
 			<Header />
 			<div className="todo-list">
-				<Button color="info" onClick={toggle}>+</Button>
+				<Button color="primary" onClick={toggle}>+</Button>
+				<Button onClick={() => sortTodo('time')}>Sort by time</Button>
+				<Button onClick={() => sortTodo('type')}>Sort by type</Button>
 				<Modal isOpen={modal} toggle={toggle}>
 					<ModalHeader toggle={toggle}>New Todo</ModalHeader>
 					<ModalBody>
@@ -133,6 +154,12 @@ const App = () => {
 							<FormGroup>
 								<Label>Deadline</Label>
 								<DateTimePicker required onChange={setDate} value={date} />
+							</FormGroup>
+							<FormGroup check>
+								<Label check>
+									<Input type="checkbox" checked={important} onChange={toggleImportant} />
+									Important
+								</Label>
 							</FormGroup>
 						</Form>
 					</ModalBody>
