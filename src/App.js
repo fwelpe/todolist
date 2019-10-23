@@ -14,7 +14,7 @@ const App = () => {
 
 	const setTodo = () => setMainView(<Todo />);
 
-	const setCalendar = () => setMainView(<Calendar />);
+	const setCalendar = () => setMainView(<Calendar setMainView={setMainView} />);
 
 	return (
 		<div>
