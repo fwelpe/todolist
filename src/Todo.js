@@ -3,6 +3,7 @@ import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, M
 import DateTimePicker from 'react-datetime-picker';
 import "react-datepicker/dist/react-datepicker.css";
 import DataListInput from 'react-datalist-input';
+import axios from 'axios';
 
 import './css/bootstrap.css';
 import TodoItem from './TodoItem';
@@ -16,9 +17,13 @@ export default () => {
 	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill']
 	const todoTypes = todoTypesArr.map((v, index) => ({ label: v, key: index }))
 	const [id, setId] = useState(false)
+	// const [todoArr, setTodoArr] = 
+
+	const getJSON = () => fetch('http://localhost:3000').then((d) => d.json())
 
 	const getTodoArr = () => {
-		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {}
+		const todoObj = getJSON()
+		console.log(todoObj);
 		const createJSX = (v) =>
 			<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} changeTodo={changeTodo} />;
 		const todoItemsArr = Object.keys(todoObj).map(createJSX);
@@ -26,14 +31,14 @@ export default () => {
 	}
 
 	const changeDone = (id) => {
-		const newTodosObj = JSON.parse(localStorage.getItem('todolist'))
+		const newTodosObj = getJSON()
 		newTodosObj[id]['completed'] = !newTodosObj[id]['completed']
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 		setTodoItems(getTodoArr())
 	}
 
 	const delTodo = (id) => {
-		let newTodosObj = JSON.parse(localStorage.getItem('todolist'))
+		let newTodosObj = getJSON()
 		delete newTodosObj[id]
 		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
 		setTodoItems(getTodoArr())
@@ -59,7 +64,7 @@ export default () => {
 	}
 
 	const newTodo = (todoObj) => {
-		const newTodosObj = JSON.parse(localStorage.getItem('todolist')) || {}
+		const newTodosObj = getJSON() || {}
 		const getNewIndex = () => {
 			const ids = Object.keys(newTodosObj)
 			const getIndex = (acc, val) => {
@@ -89,7 +94,7 @@ export default () => {
 	const [type, typeSet] = useState(todoTypesArr[0])
 
 	const sortTodo = (by = 'obj') => {
-		const todoObj = JSON.parse(localStorage.getItem('todolist')) || {};
+		const todoObj = getJSON() || {};
 		const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
 		let compareFn;
 		if (by === 'time') {
