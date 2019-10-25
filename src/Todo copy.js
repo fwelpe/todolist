@@ -3,11 +3,12 @@ import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, M
 import DateTimePicker from 'react-datetime-picker';
 import "react-datepicker/dist/react-datepicker.css";
 import DataListInput from 'react-datalist-input';
+// import axios from 'axios';
 
 import './css/bootstrap.css';
 import TodoItem from './TodoItem';
 
-export default (props) => {
+export default () => {
 	const [todo, todoSet] = useState('')
 	const handleChangeTodo = (event) => todoSet(event.target.value)
 	const [desc, descSet] = useState('')
@@ -15,23 +16,35 @@ export default (props) => {
 	const [date, setDate] = useState(new Date());
 	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill']
 	const todoTypes = todoTypesArr.map((v, index) => ({ label: v, key: index }))
-	const [id, setId] = useState(false);
-	const [important, setImportant] = useState(false);
-	const toggleImportant = () => setImportant(!important);
-	const [modal, setModal] = useState(false);
-	const todoObj = props.todoObj;
-	const setTodoObj = props.setTodoObj;
+	const [id, setId] = useState(false)
+	
+	const getJSON = async () => {
+		return await fetch('http://localhost:3001').then((r) => r.json())
+	}
+	const [todoArr , setTodoArr ] = useState(getJSON())
+
+	const getTodoArr = () => {
+		setTodoArr(getJSON())
+		const todoObj = todoArr;
+		console.log(todoObj);
+		const createJSX = (v) =>
+			<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} changeTodo={changeTodo} />;
+		const todoItemsArr = Object.keys(todoObj).map(createJSX);
+		return todoItemsArr;
+	}
 
 	const changeDone = (id) => {
-		const newTodoObj = { ...todoObj }
-		newTodoObj[id]['completed'] = !newTodoObj[id]['completed']
-		setTodoObj(newTodoObj)
+		const newTodosObj = getJSON()
+		newTodosObj[id]['completed'] = !newTodosObj[id]['completed']
+		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		setTodoItems(getTodoArr())
 	}
 
 	const delTodo = (id) => {
-		let newTodoObj = { ...todoObj }
-		delete newTodoObj[id]
-		setTodoObj(newTodoObj)
+		let newTodosObj = getJSON()
+		delete newTodosObj[id]
+		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		setTodoItems(getTodoArr())
 	}
 
 	const changeTodo = (item, id) => {
@@ -54,9 +67,9 @@ export default (props) => {
 	}
 
 	const newTodo = (todoObj) => {
-		const newTodoObj = { ...todoObj }
+		const newTodosObj = getJSON() || {}
 		const getNewIndex = () => {
-			const ids = Object.keys(newTodoObj)
+			const ids = Object.keys(newTodosObj)
 			const getIndex = (acc, val) => {
 				const numVal = Number(val)
 				return numVal >= acc ? numVal + 1 : acc
@@ -64,26 +77,27 @@ export default (props) => {
 			return ids.reduce(getIndex, 0)
 		}
 		const newIndex = id ? id : getNewIndex();
-		newTodoObj[newIndex] = todoObj;
-		setTodoObj(newTodoObj)
+		newTodosObj[newIndex] = todoObj;
+		localStorage.setItem('todolist', JSON.stringify(newTodosObj))
+		setTodoItems(getTodoArr());
 		reset();
 	}
 
-
+	const [todoItems, setTodoItems] = useState(getTodoArr());
+	const [modal, setModal] = useState(false);
 	const toggle = () => {
 		reset();
 		setModal(!modal);
 	}
-
 	const sbmt = (event) => {
 		event.preventDefault();
 		newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc, important: important });
 		toggle();
 	}
-
 	const [type, typeSet] = useState(todoTypesArr[0])
 
-	const sortTodo = (by) => {
+	const sortTodo = (by = 'obj') => {
+		const todoObj = getJSON() || {};
 		const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
 		let compareFn;
 		if (by === 'time') {
@@ -103,7 +117,9 @@ export default (props) => {
 			acc[index] = val;
 			return acc;
 		}
-		setTodoObj(todoArr.reduce(assembleObj, {}));
+		const todoObjJSON = JSON.stringify(todoArr.reduce(assembleObj, {}));
+		localStorage.setItem('todolist', todoObjJSON);
+		setTodoItems(getTodoArr());
 	}
 
 	const handleSelectInput = (currentInput, item) => {
@@ -113,6 +129,8 @@ export default (props) => {
 
 	const handleChangeType = (event) => typeSet(event.label)
 
+	const [important, setImportant] = useState(false);
+	const toggleImportant = () => setImportant(!important);
 	return (
 		<div className="todo-list">
 			<Button color="primary" onClick={toggle}>+</Button>
@@ -151,8 +169,7 @@ export default (props) => {
 					<Button color="secondary" onClick={toggle}>Cancel</Button>
 				</ModalFooter>
 			</Modal>
-			{Object.keys(todoObj).map((v) =>
-				<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} changeTodo={changeTodo} />)}
+			{todoItems}
 		</div>
 	)
 }
