@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faList } from '@fortawesome/free-solid-svg-icons';
@@ -10,11 +10,21 @@ import Todo from './Todo.js'
 import Calendar from './Calendar';
 
 const App = () => {
-	const [mainView, setMainView] = useState(<Todo />);
+	const [todoObj, setTodoObj] = useState({});
 
-	const setTodo = () => setMainView(<Todo />);
+	useEffect(() => {
+		fetch('http://localhost:3001').then((r) => r.json()).then((r) => {
+			setTodoObj(r);
+	})
+	}, [])
 
-	const setCalendar = () => setMainView(<Calendar setMainView={setMainView} />);
+	const [mainView, setMainView] = useState(<Todo todoObj={todoObj} setTodoObj={setTodoObj} />);
+
+	const setTodo = () => setMainView(<Todo todoObj={todoObj} setTodoObj={setTodoObj} />);
+
+	const setCalendar = () => setMainView(
+		<Calendar setMainView={setMainView} todoObj={todoObj} setTodoObj={setTodoObj} />
+	);
 
 	return (
 		<div>
