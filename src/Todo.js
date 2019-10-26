@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import DateTimePicker from 'react-datetime-picker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -19,8 +19,24 @@ export default (props) => {
 	const [important, setImportant] = useState(false);
 	const toggleImportant = () => setImportant(!important);
 	const [modal, setModal] = useState(false);
-	const todoObj = props.todoObj;
-	const setTodoObj = props.setTodoObj;
+	const [todoObj, setTodoObjHook] = useState({});
+
+	useEffect(() => {
+		fetch('http://localhost:3001').then((r) => r.json()).then((r) => {
+			setTodoObjHook(r);
+		})
+	}, [])
+
+	const setTodoObj = (newObj) => {
+		fetch('http://localhost:3001/write', {
+			headers: {
+				"Content-Type": "application/json"
+			},
+			method: "POST",
+			body: JSON.stringify(newObj)
+		});
+		setTodoObjHook(newObj);
+	}
 
 	const changeDone = (id) => {
 		const newTodoObj = { ...todoObj }
@@ -53,7 +69,7 @@ export default (props) => {
 		setImportant(false);
 	}
 
-	const newTodo = (todoObj) => {
+	const newTodo = (newTodoItem) => {
 		const newTodoObj = { ...todoObj }
 		const getNewIndex = () => {
 			const ids = Object.keys(newTodoObj)
@@ -64,7 +80,7 @@ export default (props) => {
 			return ids.reduce(getIndex, 0)
 		}
 		const newIndex = id ? id : getNewIndex();
-		newTodoObj[newIndex] = todoObj;
+		newTodoObj[newIndex] = newTodoItem;
 		setTodoObj(newTodoObj)
 		reset();
 	}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import './css/verticalTimeline.css';
@@ -6,7 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFlag, faCheck, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 
 export default (props) => {
-	const TodoObj = props.todoObj
+	const [TodoObj, setTodoObjHook] = useState({});
+
+	useEffect(() => {
+		fetch('http://localhost:3001').then((r) => r.json()).then((r) => {
+			setTodoObjHook(r);
+		})
+	}, [])
+
 	const todoArr = Object.keys(TodoObj).map((v) => TodoObj[v])
 
 	const tileContentFn = ({ date, view }) => {
