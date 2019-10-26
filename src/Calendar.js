@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFlag, faCheck, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
 
 export default (props) => {
-	const TodoObj = props.todoObj
+	const TodoObj = JSON.parse(localStorage.getItem('todolist')) || {}
 	const todoArr = Object.keys(TodoObj).map((v) => TodoObj[v])
 
 	const tileContentFn = ({ date, view }) => {
