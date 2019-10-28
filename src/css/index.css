@@ -67,3 +67,7 @@ input[type=checkbox]:focus {
 	margin: 15px auto;
 	width: 95%
 }
+
+#login {
+	/* width: 80%; */
+}

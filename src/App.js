@@ -1,33 +1,30 @@
-import React, { useState } from 'react';
-import { Button } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt, faList } from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
+import App from './App_authorized';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import Header from './Header.js';
 
 import "react-datepicker/dist/react-datepicker.css";
 import './css/bootstrap.css';
-import Header from './Header.js';
-import Todo from './Todo.js'
-import Calendar from './Calendar';
 
-const App = () => {
-	const [mainView, setMainView] = useState(<Todo />);
+export default () => {
 
-	const setTodo = () => setMainView(<Todo />);
-
-	const setCalendar = () => setMainView(
-		<Calendar setMainView={setMainView} />
-	);
 
 	return (
 		<div>
 			<Header />
-			<div className="mainBtns">
-				<Button onClick={setTodo}><FontAwesomeIcon icon={faList} /></Button>
-				<Button onClick={setCalendar}><FontAwesomeIcon icon={faCalendarAlt} /></Button>
+			<div id="login">
+				<Form>
+					<FormGroup>
+						<Label for="exampleEmail">Login</Label>
+						<Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" />
+					</FormGroup>
+					<FormGroup>
+						<Label for="examplePassword">Password</Label>
+						<Input type="password" name="password" id="examplePassword" placeholder="password placeholder" />
+					</FormGroup>
+					<Button>Submit</Button>
+				</Form>
 			</div>
-			{mainView}
 		</div>
 	)
 }
-
-export default App;
