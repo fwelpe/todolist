@@ -22,19 +22,30 @@ export default (props) => {
 	const [todoObj, setTodoObjHook] = useState({});
 
 	useEffect(() => {
-		fetch('http://localhost:3001').then((r) => r.json()).then((r) => {
+		fetch('http://localhost:3001', {
+			headers: {
+				"Authorization": `Bearer ${props.token}`
+			}
+		}).then((r) => {
+			props.setAuthorized(r.status);
+			return r.json();
+		})
+		.then((r) => {
 			setTodoObjHook(r);
 		})
-	}, [])
+	}, [props])
 
 	const setTodoObj = (newObj) => {
 		fetch('http://localhost:3001/write', {
 			headers: {
+				"Authorization": `Bearer ${props.token}`,
 				"Content-Type": "application/json"
 			},
 			method: "POST",
 			body: JSON.stringify(newObj)
-		});
+		})
+		.then((r) => props.setAuthorized(r.status))
+
 		setTodoObjHook(newObj);
 	}
 
