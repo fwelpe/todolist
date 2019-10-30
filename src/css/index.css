@@ -50,6 +50,7 @@ input[type=checkbox]:focus {
 	text-align: center;
 	font-size: 30px;
 	display: flex;
+	flex-direction: row-reverse;
 	justify-content: center;
 	align-items: center;
 }
@@ -70,4 +71,12 @@ input[type=checkbox]:focus {
 
 #login {
 	/* width: 80%; */
+}
+
+#title {
+	margin: auto
+}
+
+#weather {
+	font-size: 10px;
 }
