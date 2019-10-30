@@ -14,7 +14,7 @@ const App = (props) => {
 	const setTodo = () => setMainView(<Todo {...props} />);
 
 	const setCalendar = () => setMainView(
-		<Calendar setMainView={setMainView} />
+		<Calendar setMainView={setMainView} {...props}/>
 	);
 
 	return (

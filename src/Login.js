@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import './css/signin.css';
 
 export default (props) => {
 	const [user, setUser] = useState('');
@@ -7,7 +8,7 @@ export default (props) => {
 	const [psw, setPsw] = useState('');
 	const handleChangePsw = (event) => setPsw(event.target.value)
 	const [invalidInput, setInvalidInput] = useState(false);
-	const [btnClr, setBtnClr] = useState('secondary')
+	const [btnClr, setBtnClr] = useState('secondary');
 
 	const sbmt = (event) => {
 		event.preventDefault();
@@ -28,7 +29,8 @@ export default (props) => {
 				setTimeout(() => {
 					setInvalidInput(false);
 					setBtnClr('secondary');
-				}, 700)
+				}, 2000);
+				props.setToken('');
 			}
 		})
 		.then((r) => {
@@ -41,7 +43,7 @@ export default (props) => {
 	}
 
 	return (
-		<div id="login">
+		<div id="login" className="form-signin">
 			<Form onSubmit={sbmt}>
 				<FormGroup>
 					<Label for="login">Login</Label>
@@ -53,7 +55,7 @@ export default (props) => {
 					<Input invalid={invalidInput} type="password" id="psw" placeholder="Password"
 					value={psw} onChange={handleChangePsw} required />
 				</FormGroup>
-				<Button color={btnClr}>Submit</Button>
+				<Button color={btnClr} className={"btn btn-lg btn-primary btn-block"}>Submit</Button>
 			</Form>
 		</div>
 	)

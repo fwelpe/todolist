@@ -9,10 +9,15 @@ export default (props) => {
 	const [TodoObj, setTodoObjHook] = useState({});
 
 	useEffect(() => {
-		fetch('http://localhost:3001').then((r) => r.json()).then((r) => {
+		fetch('http://localhost:3001', {
+			headers: {
+				"Authorization": `Bearer ${props.token}`,
+				"Content-Type": "application/json"
+			}
+		}).then((r) => r.json()).then((r) => {
 			setTodoObjHook(r);
 		})
-	}, [])
+	}, [props.token])
 
 	const todoArr = Object.keys(TodoObj).map((v) => TodoObj[v])
 

@@ -8,11 +8,11 @@ import './css/bootstrap.css';
 import TodoItem from './TodoItem';
 
 export default (props) => {
-	const [todo, todoSet] = useState('')
-	const handleChangeTodo = (event) => todoSet(event.target.value)
-	const [desc, descSet] = useState('')
-	const handleChangeDesc = (event) => descSet(event.target.value)
+	const [todo, todoSet] = useState('');
+	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());
+	const handleChangeTodo = (event) => todoSet(event.target.value);
+	const handleChangeDesc = (event) => descSet(event.target.value);
 	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill']
 	const todoTypes = todoTypesArr.map((v, index) => ({ label: v, key: index }))
 	const [id, setId] = useState(false);
@@ -22,18 +22,32 @@ export default (props) => {
 	const [todoObj, setTodoObjHook] = useState({});
 
 	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
 		fetch('http://localhost:3001', {
 			headers: {
 				"Authorization": `Bearer ${props.token}`
-			}
-		}).then((r) => {
+			},
+			signal: signal
+		})
+		.then((r) => {
 			props.setAuthorized(r.status);
-			return r.json();
+			if (r.status === 200)
+				return r.json();
 		})
 		.then((r) => {
 			setTodoObjHook(r);
 		})
-	}, [props])
+		.catch((err) => {
+			console.log(err);
+			props.setAuthorized(err);
+		});
+
+		return function() {
+			abortController.abort();
+		};
+	}, [props]);
 
 	const setTodoObj = (newObj) => {
 		fetch('http://localhost:3001/write', {
@@ -44,22 +58,22 @@ export default (props) => {
 			method: "POST",
 			body: JSON.stringify(newObj)
 		})
-		.then((r) => props.setAuthorized(r.status))
+		.then((r) => props.setAuthorized(r.status));
 
 		setTodoObjHook(newObj);
-	}
+	};
 
 	const changeDone = (id) => {
-		const newTodoObj = { ...todoObj }
-		newTodoObj[id]['completed'] = !newTodoObj[id]['completed']
+		const newTodoObj = { ...todoObj };
+		newTodoObj[id]['completed'] = !newTodoObj[id]['completed'];
 		setTodoObj(newTodoObj)
-	}
+	};
 
 	const delTodo = (id) => {
-		let newTodoObj = { ...todoObj }
-		delete newTodoObj[id]
+		let newTodoObj = { ...todoObj };
+		delete newTodoObj[id];
 		setTodoObj(newTodoObj)
-	}
+	};
 
 	const changeTodo = (item, id) => {
 		setModal(true); // ??? не работает если вызывать обычный toggle
@@ -69,7 +83,7 @@ export default (props) => {
 		setDate(new Date(item.date));
 		setId(id);
 		setImportant(!!item.important);
-	}
+	};
 
 	const reset = () => {
 		todoSet('');
