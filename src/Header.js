@@ -68,7 +68,7 @@ export default () => {
 					<div className="temp">
 						{weatherRow}
 					</div>
-					<Img src={weatherIcon}/>
+					<Img className="icon" src={weatherIcon}/>
 				</div>
 			</header>
 		</div>

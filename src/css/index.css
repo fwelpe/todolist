@@ -81,6 +81,21 @@ input[type=checkbox]:focus {
 	display: inline;
 }
 
+@media screen and (max-width: 500px) {
+	.temp {
+		font-size: 4vw;
+	}
+	#weather {
+		width: 50vw;
+		text-align: right;
+	}
+	.icon {
+		margin-left: -3vw;
+		display: inline;
+		width: 15vw;
+	}
+}
+
 #weather {
 	font-size: 20px;
 	position: absolute;
