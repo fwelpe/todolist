@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
+import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap'
 import DateTimePicker from 'react-datetime-picker';
 import "react-datepicker/dist/react-datepicker.css";
 import DataListInput from 'react-datalist-input';
 
 import './css/bootstrap.css';
 import TodoItem from './TodoItem';
+import ButtonGroup from "reactstrap/es/ButtonGroup";
 
 export default (props) => {
 
@@ -155,11 +156,24 @@ export default (props) => {
 
 	const handleChangeType = (event) => typeSet(event.label)
 
+	const [dropdownOpen, setOpen] = useState(false);
+
+	const toggle2 = () => setOpen(!dropdownOpen);
+
 	return (
 		<div className="todo-list">
-			<Button color="primary" onClick={toggle}>+</Button>
-			<Button onClick={() => sortTodo('time')}>Sort by time</Button>
-			<Button onClick={() => sortTodo('type')}>Sort by type</Button>
+			<ButtonGroup>
+			<Button color="primary" onClick={toggle}>New Todo</Button>
+				<ButtonDropdown isOpen={dropdownOpen} toggle={toggle2}>
+					<DropdownToggle caret>
+						Sort list
+					</DropdownToggle>
+					<DropdownMenu>
+						<DropdownItem onClick={() => sortTodo('time')}>By time</DropdownItem>
+						<DropdownItem onClick={() => sortTodo('type')}>By type</DropdownItem>
+					</DropdownMenu>
+				</ButtonDropdown>
+			</ButtonGroup>
 			<Modal isOpen={modal} toggle={toggle}>
 				<ModalHeader toggle={toggle}>New Todo</ModalHeader>
 				<ModalBody>

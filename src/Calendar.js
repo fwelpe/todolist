@@ -28,14 +28,16 @@ export default (props) => {
 			const calendarMonth = date.getMonth();
 			const calendarDate = date.getDate();
 			const calendarYear = date.getYear();
-			const str = [];
+			const arr = [];
 			todoArr.forEach(({ date: todoDate, todo }) => {
 				const todoDateObj = new Date(todoDate);
 				if ((todoDateObj.getDate() === calendarDate) && (todoDateObj.getMonth() === calendarMonth) &&
 					todoDateObj.getYear() === calendarYear)
-					str.push(todo);
+					arr.push(todo);
 			})
-			return (<p>{str.join('; ')}</p>)
+			const str = arr.join('; ');
+			const resStr = str.length > 19 ? str.substr(0, 16) + '...' : str;
+			return (<p>{resStr}</p>)
 		}
 	}
 
