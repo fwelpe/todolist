@@ -75,9 +75,14 @@ input[type=checkbox]:focus {
 #title {
 }
 
-#weather {
+.temp {
+	position: relative;
+	top: 0.5vw;
+	display: inline;
+}
 
-	font-size: 10px;
+#weather {
+	font-size: 20px;
 	position: absolute;
 	right: 20px;
 }
