@@ -50,7 +50,6 @@ input[type=checkbox]:focus {
 	text-align: center;
 	font-size: 30px;
 	display: flex;
-	flex-direction: row-reverse;
 	justify-content: center;
 	align-items: center;
 }
@@ -74,9 +73,11 @@ input[type=checkbox]:focus {
 }
 
 #title {
-	margin: auto
 }
 
 #weather {
+
 	font-size: 10px;
+	position: absolute;
+	right: 20px;
 }

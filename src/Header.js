@@ -18,7 +18,14 @@ const Header = () => {
 
     return (
         <div className="header">
-            <header className="navbar"><div id={'weather'}>{weatherRow}</div><div id={'title'}>TodoList</div></header>
+            <header className="navbar">
+                <div id={'title'}>
+                    TodoList
+                </div>
+                <div id={'weather'}>
+                    {weatherRow}
+                </div>
+            </header>
         </div>
     )
 }
