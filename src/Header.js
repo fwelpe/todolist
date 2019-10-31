@@ -13,7 +13,6 @@ const Header = () => {
                     return result;
                 }).join(' ')
                 setWeatherRow(row);
-                console.log(r.main);
             })
     }, [])
 

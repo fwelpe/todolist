@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import App from './App_authorized';
+import React, {useEffect, useState} from 'react';
+import AppAuthorized from './App_authorized';
 import Header from './Header.js';
 import Login from './Login';
 
@@ -8,7 +8,23 @@ import './css/bootstrap.css';
 
 export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
-	const [authorizedStatus, setAuthorized] = useState(200);
+	const [authorizedStatus, setAuthorized] = useState();
+
+	useEffect(() => {
+	if (token) {
+			fetch('http://localhost:3001', {
+				headers: {
+					"Authorization": `Bearer ${token}`
+				}
+			})
+				.then((r) => {
+					setAuthorized(r.status);
+					if (r.status !== 200) {
+						setToken('');
+					}
+				})
+		}
+	}, [token]);
 
 	const setToken = (tkn) => {
 		localStorage.setItem('token', tkn);
@@ -19,7 +35,7 @@ export default () => {
 		<div>
 			<Header />
 			{(authorizedStatus === 200 && token) ?
-				<App token={token} setAuthorized={setAuthorized} /> :
+				<AppAuthorized token={token} setAuthorized={setAuthorized} /> :
 				<Login setToken={setToken} setAuthorized={setAuthorized} />}
 		</div>
 	)

@@ -14,7 +14,9 @@ export default (props) => {
 				"Authorization": `Bearer ${props.token}`,
 				"Content-Type": "application/json"
 			}
-		}).then((r) => r.json()).then((r) => {
+		})
+			.then((r) => r.json())
+			.then((r) => {
 			setTodoObjHook(r);
 		})
 	}, [props.token])

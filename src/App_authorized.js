@@ -8,7 +8,7 @@ import './css/bootstrap.css';
 import Todo from './Todo.js'
 import Calendar from './Calendar';
 
-const App = (props) => {
+const App_authorized = (props) => {
 	const [mainView, setMainView] = useState(<Todo {...props} />);
 
 	const setTodo = () => setMainView(<Todo {...props} />);
@@ -28,4 +28,4 @@ const App = (props) => {
 	)
 }
 
-export default App;
+export default App_authorized;

@@ -8,6 +8,7 @@ import './css/bootstrap.css';
 import TodoItem from './TodoItem';
 
 export default (props) => {
+
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());
@@ -92,7 +93,7 @@ export default (props) => {
 		setDate(new Date());
 		setId(false);
 		setImportant(false);
-	}
+	};
 
 	const newTodo = (newTodoItem) => {
 		const newTodoObj = { ...todoObj }
@@ -108,7 +109,7 @@ export default (props) => {
 		newTodoObj[newIndex] = newTodoItem;
 		setTodoObj(newTodoObj)
 		reset();
-	}
+	};
 
 
 	const toggle = () => {
