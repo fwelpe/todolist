@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import AppAuthorized from './App_authorized';
-import Header from './Header.js';
-import Login from './Login';
-
-import "react-datepicker/dist/react-datepicker.css";
-import './css/bootstrap.css';
+import AppAuthorized from '../AppAuthorized/AppAuthorized.jsx';
+import Header from '../Header/Header.jsx';
+import Login from '../Login/Login.jsx';
 
 export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));

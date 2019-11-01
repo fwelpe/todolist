@@ -1,0 +1,12 @@
+.mainBtns {
+    margin: 15px;
+}
+
+input[type=checkbox] {
+    margin-right: 10px;
+    font-size: 30px;
+}
+
+input[type=checkbox]:focus {
+    outline: 0;
+}

@@ -3,12 +3,12 @@ import { Button } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faList } from '@fortawesome/free-solid-svg-icons';
 
-import "react-datepicker/dist/react-datepicker.css";
-import './css/bootstrap.css';
-import Todo from './Todo.js'
-import Calendar from './Calendar';
+import './AppAuthorized.css';
 
-const App_authorized = (props) => {
+import Todo from '../Todo/Todo.jsx';
+import Calendar from '../Calendar/Calendar.jsx';
+
+const AppAuthorized = (props) => {
 	const [mainView, setMainView] = useState(<Todo {...props} />);
 
 	const setTodo = () => setMainView(<Todo {...props} />);
@@ -28,4 +28,4 @@ const App_authorized = (props) => {
 	)
 }
 
-export default App_authorized;
+export default AppAuthorized;

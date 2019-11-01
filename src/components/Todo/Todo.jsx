@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap'
 import DateTimePicker from 'react-datetime-picker';
-import "react-datepicker/dist/react-datepicker.css";
 import DataListInput from 'react-datalist-input';
-
-import './css/bootstrap.css';
-import TodoItem from './TodoItem';
 import ButtonGroup from "reactstrap/es/ButtonGroup";
+
+import TodoItem from '../TodoItem/TodoItem.jsx';
+import './Todo.css';
 
 export default (props) => {
 
@@ -207,6 +206,7 @@ export default (props) => {
 					<Button color="secondary" onClick={toggle}>Cancel</Button>
 				</ModalFooter>
 			</Modal>
+
 			{Object.keys(todoObj).map((v) =>
 				<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} changeTodo={changeTodo} />)}
 		</div>

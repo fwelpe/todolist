@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import './css/verticalTimeline.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFlag, faCheck, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
+
+import './Calendar.css';
 
 export default (props) => {
 	const [TodoObj, setTodoObjHook] = useState({});
@@ -19,9 +20,9 @@ export default (props) => {
 			.then((r) => {
 			setTodoObjHook(r);
 		})
-	}, [props.token])
+	}, [props.token]);
 
-	const todoArr = Object.keys(TodoObj).map((v) => TodoObj[v])
+	const todoArr = Object.keys(TodoObj).map((v) => TodoObj[v]);
 
 	const tileContentFn = ({ date, view }) => {
 		if (view === 'month') {
@@ -55,31 +56,31 @@ export default (props) => {
 
 	const getDayTodo = (time) => todoArr.filter((v) => compare(time, v.date))
 
-	const important = <FontAwesomeIcon size="lg" icon={faFlag} />
-	const done = <FontAwesomeIcon size="lg" icon={faCheck} />
-	const regular = <FontAwesomeIcon size="lg" icon={faAlignJustify} />
+	const important = <FontAwesomeIcon size="lg" icon={faFlag} />;
+	const done = <FontAwesomeIcon size="lg" icon={faCheck} />;
+	const regular = <FontAwesomeIcon size="lg" icon={faAlignJustify} />;
 
 	const onClickDayFn = (value) => {
 		const dayTodo = getDayTodo(value);
-		const iconStyle = { background: 'rgb(33, 150, 243)', color: '#fff' }
+		const iconStyle = { background: 'rgb(33, 150, 243)', color: '#fff' };
 		const dayTodoTimesorted = dayTodo.sort(({ date: left }, { date: right }) =>
-			(new Date(left) - new Date(right)))
+			(new Date(left) - new Date(right)));
 		const dayTodoJSX = dayTodoTimesorted.map((v, index) => {
-			const ifDone = { 'textDecoration': 'none' }
-			let icon;
-			if (v.completed) {
-				icon = done;
-				ifDone['textDecoration'] = 'line-through'
-			}
+			const ifDone = v.completed ? 'done' : '';
+			const icon = (() => {
+			if (v.completed)
+				return done;
 			else if (v.important)
-				icon = important;
+				return important;
 			else
-				icon = regular;
-			const deadline = new Date(v.date).getHours() + ':' + new Date(v.date).getMinutes()
+				return regular;
+
+			})();
+			const deadline = new Date(v.date).getHours() + ':' + new Date(v.date).getMinutes();
 			return <VerticalTimelineElement key={index} iconStyle={iconStyle} icon={icon} date={deadline}>
-				<h4 style={ifDone}>{v.todo} [{v.type}]</h4><p style={ifDone}>{v.desc}</p>
+				<h4 className={ifDone}>{v.todo} [{v.type}]</h4><p className={ifDone}>{v.desc}</p>
 			</VerticalTimelineElement>
-		})
+		});
 		if (dayTodo.length)
 			props.setMainView(<VerticalTimeline>{dayTodoJSX}</VerticalTimeline>)
 	}
