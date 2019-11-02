@@ -38,7 +38,8 @@
 
 .vertical-timeline-element {
 	position: relative;
-	margin: 2em 0
+	margin: 2em 0;
+	word-wrap: break-word;
 }
 
 .vertical-timeline-element>div {

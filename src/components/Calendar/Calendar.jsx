@@ -76,7 +76,10 @@ export default (props) => {
 				return regular;
 
 			})();
-			const deadline = new Date(v.date).getHours() + ':' + new Date(v.date).getMinutes();
+			const formatter = (new Intl.NumberFormat('ru-RU', { minimumIntegerDigits: 2 })).format;
+			const timeObj = new Date(v.date);
+			const deadline = formatter(timeObj.getHours()) + ':' + formatter(timeObj.getMinutes());
+
 			return <VerticalTimelineElement key={index} iconStyle={iconStyle} icon={icon} date={deadline}>
 				<h4 className={ifDone}>{v.todo} [{v.type}]</h4><p className={ifDone}>{v.desc}</p>
 			</VerticalTimelineElement>
