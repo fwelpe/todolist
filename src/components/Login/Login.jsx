@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import './Login.css';
+import expressLoginUrl from "../../config/expressLoginUrl";
 
 export default (props) => {
 	const [user, setUser] = useState('');
@@ -12,7 +13,7 @@ export default (props) => {
 
 	const sbmt = (event) => {
 		event.preventDefault();
-		fetch('http://localhost:3001/login', {
+		fetch(expressLoginUrl, {
 			headers: {
 				"Content-Type": "application/json"
 			},
@@ -35,7 +36,6 @@ export default (props) => {
 		})
 		.then((r) => {
 			if (r) {
-				// console.log(r);
 				props.setToken(r);
 			}
 		})

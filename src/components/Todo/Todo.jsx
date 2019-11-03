@@ -3,6 +3,8 @@ import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, M
 import DateTimePicker from 'react-datetime-picker';
 import DataListInput from 'react-datalist-input';
 import ButtonGroup from "reactstrap/es/ButtonGroup";
+import expressUrl from "../../config/expressUrl";
+import expressWriteUrl from "../../config/expressWriteUrl";
 
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
@@ -26,7 +28,7 @@ export default (props) => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
-		fetch('http://localhost:3001', {
+		fetch(expressUrl, {
 			headers: {
 				"Authorization": `Bearer ${props.token}`
 			},
@@ -51,7 +53,7 @@ export default (props) => {
 	}, [props]);
 
 	const setTodoObj = (newObj) => {
-		fetch('http://localhost:3001/write', {
+		fetch(expressWriteUrl, {
 			headers: {
 				"Authorization": `Bearer ${props.token}`,
 				"Content-Type": "application/json"
@@ -77,7 +79,7 @@ export default (props) => {
 	};
 
 	const changeTodo = (item, id) => {
-		setModal(true); // ??? не работает если вызывать обычный toggle
+		setModal(true);
 		todoSet(item.todo);
 		descSet(item.desc);
 		typeSet(item.type);

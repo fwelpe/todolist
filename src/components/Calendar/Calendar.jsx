@@ -3,6 +3,7 @@ import Calendar from 'react-calendar';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFlag, faCheck, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
+import expressUrl from "../../config/expressUrl";
 
 import './Calendar.css';
 
@@ -10,7 +11,7 @@ export default (props) => {
 	const [TodoObj, setTodoObjHook] = useState({});
 
 	useEffect(() => {
-		fetch('http://localhost:3001', {
+		fetch(expressUrl, {
 			headers: {
 				"Authorization": `Bearer ${props.token}`,
 				"Content-Type": "application/json"

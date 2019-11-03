@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import AppAuthorized from '../AppAuthorized/AppAuthorized.jsx';
 import Header from '../Header/Header.jsx';
 import Login from '../Login/Login.jsx';
+import expressUrl from "../../config/expressUrl";
 
 export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
@@ -9,7 +10,7 @@ export default () => {
 
 	useEffect(() => {
 	if (token) {
-			fetch('http://localhost:3001', {
+			fetch(expressUrl, {
 				headers: {
 					"Authorization": `Bearer ${token}`
 				}

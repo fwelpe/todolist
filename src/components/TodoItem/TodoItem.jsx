@@ -7,26 +7,29 @@ import { faFlag, faTimesCircle, faPencilAlt } from '@fortawesome/free-solid-svg-
 import './TodoItem.css';
 
 const TodoItem = (props) => {
-	const ifCompletedClass = props.item.completed ? 'completed' : '';
 	const msInDay = 1000 * 60 * 60 * 24;
+	const ifCompletedClass = props.item.completed ? 'completed' : '';
 	const deadlineClass = (() => {
 		if (props.item.completed)
-			return ifCompletedClass;
+			return 'completed';
 		else if ((Date.parse(new Date(props.item.date)) - Date.parse(new Date())) < msInDay * 2)
 			return 'bg-danger';
 		else
 			return '';
 	})();
+	const importantIconClass = props.item.important && !props.item.completed ?
+		'importantIcon text-danger rightInFlex' : 'invisible';
+
 	const yearNow = new Date().getFullYear();
 	const yearTodo = new Date(props.item.date).getFullYear();
-	const timeRegex = yearNow === yearTodo ? 'MMMM D' : "MMMM D, YYYY";
+	const timeRegex = yearNow === yearTodo ? 'MMMM D' : 'MMMM D, YYYY';
 	const expires = <Moment format={timeRegex}>{props.item.date}</Moment>;
-	const importantIconClass = (props.item.important && !props.item.completed ? 'importantIcon' : 'invisible') + ' text-danger rightInFlex';
+
 	const [modal3, setModal3] = useState(false);
-	const toggle3 = () => setModal3(!modal3);
+	const toggle = () => setModal3(!modal3);
 	const deleteItem = () => {
 		props.delTodo(props.id);
-		toggle3();
+		toggle();
 	};
 
 	return (
@@ -39,16 +42,18 @@ const TodoItem = (props) => {
 			</div>
 				<FontAwesomeIcon icon={faFlag} className={importantIconClass} />
 				<ButtonGroup>
-					<Button onClick={toggle3}><FontAwesomeIcon icon={faTimesCircle} /></Button>
-					<Button onClick={() => props.changeTodo(props.item, props.id)}><FontAwesomeIcon icon={faPencilAlt} /></Button>
+					<Button onClick={toggle}><FontAwesomeIcon icon={faTimesCircle} /></Button>
+					<Button onClick={() => props.changeTodo(props.item, props.id)}>
+						<FontAwesomeIcon icon={faPencilAlt} />
+					</Button>
 				</ButtonGroup>
-			<Modal isOpen={modal3} toggle={toggle3}>
-				<ModalHeader toggle={toggle3}>
+			<Modal isOpen={modal3} toggle={toggle}>
+				<ModalHeader toggle={toggle}>
 					Are you sure?
 				</ModalHeader>
 				<ModalFooter>
 					<Button color="primary" onClick={deleteItem}>Yes</Button>
-					<Button color="secondary" onClick={toggle3}>No</Button>
+					<Button color="secondary" onClick={toggle}>No</Button>
 				</ModalFooter>
 			</Modal>
 			</div>

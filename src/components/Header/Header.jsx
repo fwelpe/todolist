@@ -1,24 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import Img from 'react-image';
+import openweatherUrl from "../../config/openweatherUrl";
+import openweatherIconUrl from "../../config/openweatherIconUrl";
 
 import './Header.css'
 
 export default () => {
-	const key = '3eb3f8b5e93b49c844e8317fe0e4e210';
-	const [weatherRow, setWeatherRow] = useState('');
+	const [weatherText, setWeatherText] = useState('');
 	const [weatherIcon, setWeatherIcon] = useState('');
 
 	useEffect(() => {
-		fetch(`http://api.openweathermap.org/data/2.5/weather?id=524901&APPID=${key}&units=metric`)
+		fetch(openweatherUrl)
 			.then((r) => r.json())
 			.then((r) => {
-				const row = r.main.temp + ' °C'
-				/*const row = Object.keys(r.main).map((v) => {      // old row
-					const result = v + ': ' + r.main[v];
-					return result;
-				}).join(' ')*/
-				setWeatherRow(row);
-				setWeatherIcon(`http://openweathermap.org/img/wn/${r.weather[0].icon}@2x.png`)
+				const row = r.main.temp + ' °C';
+				setWeatherText(row);
+				setWeatherIcon(openweatherIconUrl[0] + r.weather[0].icon + openweatherIconUrl[1]);
 			})
 	}, [])
 	return (
@@ -28,7 +25,7 @@ export default () => {
 				</div>
 				<div id={'weather'}>
 					<div className="temp">
-						{weatherRow}
+						{weatherText}
 					</div>
 					<Img className="icon" src={weatherIcon}/>
 				</div>

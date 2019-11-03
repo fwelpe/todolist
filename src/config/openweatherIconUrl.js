@@ -1,0 +1,1 @@
+export default ['http://openweathermap.org/img/wn/', '@2x.png'];
