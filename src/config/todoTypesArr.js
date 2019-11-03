@@ -1,0 +1,1 @@
+export default ['Work', 'Hardwork', 'Learning', 'Chill'];

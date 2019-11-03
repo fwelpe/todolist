@@ -5,18 +5,17 @@ import DataListInput from 'react-datalist-input';
 import ButtonGroup from "reactstrap/es/ButtonGroup";
 import expressUrl from "../../config/expressUrl";
 import expressWriteUrl from "../../config/expressWriteUrl";
+import todoTypesArr from "../../config/todoTypesArr";
 
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
 
 export default (props) => {
-
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());
 	const handleChangeTodo = (event) => todoSet(event.target.value);
 	const handleChangeDesc = (event) => descSet(event.target.value);
-	const todoTypesArr = ['Work', 'Hardwork', 'Learning', 'Chill']
 	const todoTypes = todoTypesArr.map((v, index) => ({ label: v, key: index }))
 	const [id, setId] = useState(false);
 	const [important, setImportant] = useState(false);
