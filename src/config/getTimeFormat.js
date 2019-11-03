@@ -1,0 +1,1 @@
+export default (currYear) => currYear ? 'MMMM D' : 'MMMM D, YYYY';

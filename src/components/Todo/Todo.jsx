@@ -3,7 +3,7 @@ import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, M
 import DateTimePicker from 'react-datetime-picker';
 import DataListInput from 'react-datalist-input';
 import ButtonGroup from "reactstrap/es/ButtonGroup";
-import expressUrl from "../../config/expressUrl";
+import expressGetUrl from "../../config/expressUrl";
 import expressWriteUrl from "../../config/expressWriteUrl";
 import todoTypesArr from "../../config/todoTypesArr";
 
@@ -27,7 +27,7 @@ export default (props) => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
-		fetch(expressUrl, {
+		fetch(expressGetUrl, {
 			headers: {
 				"Authorization": `Bearer ${props.token}`
 			},

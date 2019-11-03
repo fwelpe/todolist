@@ -3,6 +3,7 @@ import {Button, ButtonGroup, Modal, ModalFooter, ModalHeader} from 'reactstrap';
 import Moment from 'react-moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFlag, faTimesCircle, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import getTimeFormat from '../../config/getTimeFormat'
 
 import './TodoItem.css';
 
@@ -13,17 +14,17 @@ const TodoItem = (props) => {
 		if (props.item.completed)
 			return 'completed';
 		else if ((Date.parse(new Date(props.item.date)) - Date.parse(new Date())) < msInDay * 2)
-			return 'bg-danger';
+			return 'text-danger';
 		else
 			return '';
 	})();
 	const importantIconClass = props.item.important && !props.item.completed ?
-		'importantIcon text-danger rightInFlex' : 'invisible';
+		'importantIcon text-danger rightInFlex' : 'invisible rightInFlex';
 
 	const yearNow = new Date().getFullYear();
 	const yearTodo = new Date(props.item.date).getFullYear();
-	const timeRegex = yearNow === yearTodo ? 'MMMM D' : 'MMMM D, YYYY';
-	const expires = <Moment format={timeRegex}>{props.item.date}</Moment>;
+	const timeFormat = getTimeFormat(yearNow === yearTodo);
+	const expires = <Moment format={timeFormat}>{props.item.date}</Moment>;
 
 	const [modal3, setModal3] = useState(false);
 	const toggle = () => setModal3(!modal3);

@@ -21,10 +21,6 @@
     color: #dc3545
 }
 
-.soonStyle {
-    background: danger;
-}
-
 .completed {
     font-style: italic;
     color: #cdcdcd;
