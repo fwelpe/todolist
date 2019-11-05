@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import './Login.css';
 import expressLoginUrl from "../../config/expressLoginUrl";
+import {Redirect} from "react-router-dom";
 
 export default (props) => {
 	const [user, setUser] = useState('');
@@ -37,6 +38,7 @@ export default (props) => {
 		.then((r) => {
 			if (r) {
 				props.setToken(r);
+				window.location.href="/home";
 			}
 		})
 		.catch((err) => {console.error(err)})

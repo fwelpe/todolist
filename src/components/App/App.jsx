@@ -3,13 +3,14 @@ import AppAuthorized from '../AppAuthorized/AppAuthorized.jsx';
 import Header from '../Header/Header.jsx';
 import Login from '../Login/Login.jsx';
 import expressUrl from "../../config/expressUrl";
+import {BrowserRouter, Route, Link, Switch, Redirect} from "react-router-dom";
 
 export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
 	const [authorizedStatus, setAuthorized] = useState();
 
 	useEffect(() => {
-	if (token) {
+		if (token) {
 			fetch(expressUrl, {
 				headers: {
 					"Authorization": `Bearer ${token}`
@@ -30,11 +31,23 @@ export default () => {
 	}
 
 	return (
-		<div>
-			<Header />
-			{(authorizedStatus === 200 && token) ?
-				<AppAuthorized token={token} setAuthorized={setAuthorized} /> :
-				<Login setToken={setToken} setAuthorized={setAuthorized} />}
-		</div>
+		<BrowserRouter>
+			<Header/>
+			<Switch>
+				<Route exact path={'/'}>
+					{(authorizedStatus !== 200 || !token) ? <Redirect to={'/login'}/> : <Redirect to={'/home'}/>}
+				</Route>
+
+				<Route path={'/login'}>
+					<Login setToken={setToken} setAuthorized={setAuthorized}/>
+				</Route>
+
+				<Route path={'/home'}>
+					<AppAuthorized token={token} setAuthorized={setAuthorized}/>
+				</Route>
+
+
+			</Switch>
+		</BrowserRouter>
 	)
 }
