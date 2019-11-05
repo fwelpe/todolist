@@ -3,7 +3,7 @@ import AppAuthorized from '../AppAuthorized/AppAuthorized.jsx';
 import Header from '../Header/Header.jsx';
 import Login from '../Login/Login.jsx';
 import expressUrl from "../../config/expressUrl";
-import {BrowserRouter, Route, Link, Switch, Redirect} from "react-router-dom";
+import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 
 export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
@@ -35,7 +35,7 @@ export default () => {
 			<Header/>
 			<Switch>
 				<Route exact path={'/'}>
-					{(authorizedStatus !== 200 || !token) ? <Redirect to={'/login'}/> : <Redirect to={'/home'}/>}
+					{(authorizedStatus === 200 && token) ? <Redirect to={'/home'}/> : <Redirect to={'/login'}/>}
 				</Route>
 
 				<Route path={'/login'}>
@@ -45,8 +45,6 @@ export default () => {
 				<Route path={'/home'}>
 					<AppAuthorized token={token} setAuthorized={setAuthorized}/>
 				</Route>
-
-
 			</Switch>
 		</BrowserRouter>
 	)

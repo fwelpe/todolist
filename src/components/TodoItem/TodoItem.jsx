@@ -36,7 +36,7 @@ const TodoItem = (props) => {
 	return (
 		<div className="todo-item">
 			<input type="checkbox" checked={props.item.completed} onChange={() => props.changeDone(props.id)} />
-			<div>
+			<div className={'mx-lg-3'}>
 				<p className={ifCompletedClass}>{props.item.todo} [{props.item.type}]</p>
 				<p className={ifCompletedClass}><small>{props.item.desc}</small></p>
 				<p className={deadlineClass}>Deadline: {expires}</p>

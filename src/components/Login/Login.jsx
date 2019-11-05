@@ -38,7 +38,8 @@ export default (props) => {
 		.then((r) => {
 			if (r) {
 				props.setToken(r);
-				window.location.href="/home";
+				this.props.history.push('/new/url');
+				console.log('odin')
 			}
 		})
 		.catch((err) => {console.error(err)})
