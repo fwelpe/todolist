@@ -7,7 +7,7 @@ import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 
 export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
-	const [authorizedStatus, setAuthorized] = useState();
+	const [authorizedStatus, setAuthorized] = useState(false);
 
 	useEffect(() => {
 		if (token) {
@@ -35,15 +35,20 @@ export default () => {
 			<Header/>
 			<Switch>
 				<Route exact path={'/'}>
-					{(authorizedStatus === 200 && token) ? <Redirect to={'/home'}/> : <Redirect to={'/login'}/>}
+					<Redirect to={'/login'}/>
 				</Route>
 
-				<Route path={'/login'}>
-					<Login setToken={setToken} setAuthorized={setAuthorized}/>
-				</Route>
+				<Route path={'/login'} render={() => <Login setToken={setToken} setAuthorized={setAuthorized}
+															isAuthorized={((authorizedStatus === 200) && !!token)}/>}/>
 
 				<Route path={'/home'}>
-					<AppAuthorized token={token} setAuthorized={setAuthorized}/>
+					<AppAuthorized token={token} setAuthorized={setAuthorized}
+								   isAuthorized={((authorizedStatus === 200) && !!token)}/>
+				</Route>
+				<Route>
+					<h1 className={'text-center'}>
+						404
+					</h1>
 				</Route>
 			</Switch>
 		</BrowserRouter>
