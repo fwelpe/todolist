@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Calendar from 'react-calendar';
-import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFlag, faCheck, faAlignJustify } from '@fortawesome/free-solid-svg-icons';
-import expressUrl from "../../config/expressUrl";
+import {VerticalTimeline, VerticalTimelineElement} from 'react-vertical-timeline-component';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faFlag, faCheck, faAlignJustify} from '@fortawesome/free-solid-svg-icons';
+import {Route, Switch, Redirect, useHistory, useRouteMatch} from "react-router-dom";
 
+import expressUrl from "../../config/expressUrl";
 import './Calendar.css';
 
 export default (props) => {
 	const [TodoObj, setTodoObjHook] = useState({});
+	let match = useRouteMatch();
+
 
 	useEffect(() => {
 		fetch(expressUrl, {
@@ -19,19 +22,19 @@ export default (props) => {
 		})
 			.then((r) => r.json())
 			.then((r) => {
-			setTodoObjHook(r);
-		})
+				setTodoObjHook(r);
+			})
 	}, [props.token]);
 
 	const todoArr = Object.keys(TodoObj).map((v) => TodoObj[v]);
 
-	const tileContentFn = ({ date, view }) => {
+	const tileContentFn = ({date, view}) => {
 		if (view === 'month') {
 			const calendarMonth = date.getMonth();
 			const calendarDate = date.getDate();
 			const calendarYear = date.getYear();
 			const arr = [];
-			todoArr.forEach(({ date: todoDate, todo }) => {
+			todoArr.forEach(({date: todoDate, todo}) => {
 				const todoDateObj = new Date(todoDate);
 				if ((todoDateObj.getDate() === calendarDate) && (todoDateObj.getMonth() === calendarMonth) &&
 					todoDateObj.getYear() === calendarYear)
@@ -57,27 +60,26 @@ export default (props) => {
 
 	const getDayTodo = (time) => todoArr.filter((v) => compare(time, v.date))
 
-	const important = <FontAwesomeIcon size="lg" icon={faFlag} />;
-	const done = <FontAwesomeIcon size="lg" icon={faCheck} />;
-	const regular = <FontAwesomeIcon size="lg" icon={faAlignJustify} />;
+	const important = <FontAwesomeIcon size="lg" icon={faFlag}/>;
+	const done = <FontAwesomeIcon size="lg" icon={faCheck}/>;
+	const regular = <FontAwesomeIcon size="lg" icon={faAlignJustify}/>;
 
 	const onClickDayFn = (value) => {
 		const dayTodo = getDayTodo(value);
-		const iconStyle = { background: 'rgb(33, 150, 243)', color: '#fff' };
-		const dayTodoTimesorted = dayTodo.sort(({ date: left }, { date: right }) =>
+		const iconStyle = {background: 'rgb(33, 150, 243)', color: '#fff'};
+		const dayTodoTimesorted = dayTodo.sort(({date: left}, {date: right}) =>
 			(new Date(left) - new Date(right)));
 		const dayTodoJSX = dayTodoTimesorted.map((v, index) => {
 			const ifDone = v.completed ? 'done' : '';
 			const icon = (() => {
-			if (v.completed)
-				return done;
-			else if (v.important)
-				return important;
-			else
-				return regular;
-
+				if (v.completed)
+					return done;
+				else if (v.important)
+					return important;
+				else
+					return regular;
 			})();
-			const formatter = (new Intl.NumberFormat('ru-RU', { minimumIntegerDigits: 2 })).format;
+			const formatter = (new Intl.NumberFormat('ru-RU', {minimumIntegerDigits: 2})).format;
 			const timeObj = new Date(v.date);
 			const deadline = formatter(timeObj.getHours()) + ':' + formatter(timeObj.getMinutes());
 
@@ -90,6 +92,11 @@ export default (props) => {
 	}
 
 	return (
-		<Calendar tileContent={tileContentFn} className="calendar" onClickDay={onClickDayFn} />
+		<Switch>
+			<Route exact path={match.path}>
+				<Calendar tileContent={tileContentFn} className="calendar" onClickDay={onClickDayFn}/>
+			</Route>
+			{/*<Route path={`${match.path}/:day`} component={} />*/}
+		</Switch>
 	)
 }

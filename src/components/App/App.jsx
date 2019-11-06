@@ -7,7 +7,7 @@ import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 
 export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
-	const [authorizedStatus, setAuthorized] = useState(false);
+	const [authorizedStatus, setAuthorized] = useState();
 
 	useEffect(() => {
 		if (token) {

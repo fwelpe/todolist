@@ -1,5 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Label, Input, FormGroup, Form, Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap'
+import React, {useState, useEffect} from 'react';
+import {
+	Label,
+	Input,
+	FormGroup,
+	Form,
+	Button,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	ButtonDropdown,
+	DropdownMenu,
+	DropdownItem,
+	DropdownToggle
+} from 'reactstrap'
 import DateTimePicker from 'react-datetime-picker';
 import DataListInput from 'react-datalist-input';
 import ButtonGroup from "reactstrap/es/ButtonGroup";
@@ -16,7 +30,7 @@ export default (props) => {
 	const [date, setDate] = useState(new Date());
 	const handleChangeTodo = (event) => todoSet(event.target.value);
 	const handleChangeDesc = (event) => descSet(event.target.value);
-	const todoTypes = todoTypesArr.map((v, index) => ({ label: v, key: index }))
+	const todoTypes = todoTypesArr.map((v, index) => ({label: v, key: index}));
 	const [id, setId] = useState(false);
 	const [important, setImportant] = useState(false);
 	const toggleImportant = () => setImportant(!important);
@@ -33,20 +47,20 @@ export default (props) => {
 			},
 			signal: signal
 		})
-		.then((r) => {
-			props.setAuthorized(r.status);
-			if (r.status === 200)
-				return r.json();
-		})
-		.then((r) => {
-			setTodoObjHook(r);
-		})
-		.catch((err) => {
-			console.log(err);
-			props.setAuthorized(err);
-		});
+			.then((r) => {
+				props.setAuthorized(r.status);
+				if (r.status === 200)
+					return r.json();
+			})
+			.then((r) => {
+				setTodoObjHook(r);
+			})
+			.catch((err) => {
+				// console.log(err);
+				props.setAuthorized(err);
+			});
 
-		return function() {
+		return function () {
 			abortController.abort();
 		};
 	}, [props]);
@@ -60,19 +74,19 @@ export default (props) => {
 			method: "POST",
 			body: JSON.stringify(newObj)
 		})
-		.then((r) => props.setAuthorized(r.status));
+			.then((r) => props.setAuthorized(r.status));
 
 		setTodoObjHook(newObj);
 	};
 
 	const changeDone = (id) => {
-		const newTodoObj = { ...todoObj };
+		const newTodoObj = {...todoObj};
 		newTodoObj[id]['completed'] = !newTodoObj[id]['completed'];
 		setTodoObj(newTodoObj)
 	};
 
 	const delTodo = (id) => {
-		let newTodoObj = { ...todoObj };
+		let newTodoObj = {...todoObj};
 		delete newTodoObj[id];
 		setTodoObj(newTodoObj)
 	};
@@ -97,7 +111,7 @@ export default (props) => {
 	};
 
 	const newTodo = (newTodoItem) => {
-		const newTodoObj = { ...todoObj }
+		const newTodoObj = {...todoObj}
 		const getNewIndex = () => {
 			const ids = Object.keys(newTodoObj)
 			const getIndex = (acc, val) => {
@@ -120,7 +134,7 @@ export default (props) => {
 
 	const sbmt = (event) => {
 		event.preventDefault();
-		newTodo({ todo: todo, completed: false, type: type, date: date, desc: desc, important: important });
+		newTodo({todo: todo, completed: false, type: type, date: date, desc: desc, important: important});
 		toggle();
 	}
 
@@ -133,8 +147,7 @@ export default (props) => {
 			compareFn = (left, right) => {
 				return (new Date(left['date']) - new Date(right['date']));
 			}
-		}
-		else if (by === 'type') {
+		} else if (by === 'type') {
 			compareFn = (left, right) => {
 				const lowerLeft = left.type.toLowerCase();
 				const lowerRight = right.type.toLowerCase();
@@ -163,7 +176,7 @@ export default (props) => {
 	return (
 		<div className="todo-list">
 			<ButtonGroup>
-			<Button color="primary" onClick={toggle}>New Todo</Button>
+				<Button color="primary" onClick={toggle}>New Todo</Button>
 				<ButtonDropdown isOpen={dropdownOpen} toggle={toggle2}>
 					<DropdownToggle caret>
 						Sort list
@@ -180,25 +193,26 @@ export default (props) => {
 					<Form id='add' onSubmit={sbmt}>
 						<FormGroup>
 							<Label>Name</Label>
-							<Input type="text" value={todo} onChange={handleChangeTodo} required />
+							<Input type="text" value={todo} onChange={handleChangeTodo} required/>
 						</FormGroup>
 						<FormGroup>
 							<Label>Description (optional)</Label>
-							<Input type="text" value={desc} onChange={handleChangeDesc} />
+							<Input type="text" value={desc} onChange={handleChangeDesc}/>
 						</FormGroup>
 						<FormGroup>
 							<Label for="exampleSelect">Type</Label>
-							<DataListInput required initialValue={type} items={todoTypes} onSelect={handleChangeType} match={handleSelectInput} />
+							<DataListInput required initialValue={type} items={todoTypes} onSelect={handleChangeType}
+										   match={handleSelectInput}/>
 						</FormGroup>
 						<FormGroup>
 							<Label>Deadline</Label>
-							<DateTimePicker required onChange={setDate} value={date} />
+							<DateTimePicker required onChange={setDate} value={date}/>
 						</FormGroup>
 						<FormGroup check>
 							<Label check>
-								<Input type="checkbox" checked={important} onChange={toggleImportant} />
+								<Input type="checkbox" checked={important} onChange={toggleImportant}/>
 								Important
-								</Label>
+							</Label>
 						</FormGroup>
 					</Form>
 				</ModalBody>
@@ -209,7 +223,8 @@ export default (props) => {
 			</Modal>
 
 			{Object.keys(todoObj).map((v) =>
-				<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo} changeTodo={changeTodo} />)}
+				<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo}
+						  changeTodo={changeTodo}/>)}
 		</div>
 	)
 }
