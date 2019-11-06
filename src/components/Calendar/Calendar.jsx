@@ -3,7 +3,7 @@ import Calendar from 'react-calendar';
 import {VerticalTimeline, VerticalTimelineElement} from 'react-vertical-timeline-component';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFlag, faCheck, faAlignJustify} from '@fortawesome/free-solid-svg-icons';
-import {Route, Switch, Redirect, useHistory, useRouteMatch} from "react-router-dom";
+import {Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
 
 import expressUrl from "../../config/expressUrl";
 import './Calendar.css';
@@ -11,6 +11,7 @@ import './Calendar.css';
 export default (props) => {
 	const [TodoObj, setTodoObjHook] = useState({});
 	let match = useRouteMatch();
+	let history = useHistory();
 
 
 	useEffect(() => {
@@ -24,6 +25,7 @@ export default (props) => {
 			.then((r) => {
 				setTodoObjHook(r);
 			})
+			.catch((err) => console.error(err))
 	}, [props.token]);
 
 	const todoArr = Object.keys(TodoObj).map((v) => TodoObj[v]);
@@ -65,7 +67,12 @@ export default (props) => {
 	const regular = <FontAwesomeIcon size="lg" icon={faAlignJustify}/>;
 
 	const onClickDayFn = (value) => {
-		const dayTodo = getDayTodo(value);
+		if (getDayTodo(value).length)
+			history.push(`/home/calendar/${value}`);
+	}
+
+	const getVTline = (props) => {
+		const dayTodo = getDayTodo(props.match.params.day);
 		const iconStyle = {background: 'rgb(33, 150, 243)', color: '#fff'};
 		const dayTodoTimesorted = dayTodo.sort(({date: left}, {date: right}) =>
 			(new Date(left) - new Date(right)));
@@ -87,8 +94,7 @@ export default (props) => {
 				<h4 className={ifDone}>{v.todo} [{v.type}]</h4><p className={ifDone}>{v.desc}</p>
 			</VerticalTimelineElement>
 		});
-		if (dayTodo.length)
-			props.setMainView(<VerticalTimeline>{dayTodoJSX}</VerticalTimeline>)
+		return (<VerticalTimeline>{dayTodoJSX}</VerticalTimeline>)
 	}
 
 	return (
@@ -96,7 +102,7 @@ export default (props) => {
 			<Route exact path={match.path}>
 				<Calendar tileContent={tileContentFn} className="calendar" onClickDay={onClickDayFn}/>
 			</Route>
-			{/*<Route path={`${match.path}/:day`} component={} />*/}
+			<Route path={`${match.path}/:day`} render={(props) => getVTline(props)}/>
 		</Switch>
 	)
 }
