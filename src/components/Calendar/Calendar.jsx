@@ -9,7 +9,6 @@ import expressUrl from "../../config/expressUrl";
 import './Calendar.css';
 
 export default (props) => {
-	console.log('calendar')
 	const [TodoObj, setTodoObjHook] = useState({});
 	let match = useRouteMatch();
 	let history = useHistory();

@@ -10,7 +10,6 @@ import Todo from '../Todo/Todo.jsx';
 import Calendar from '../Calendar/Calendar.jsx';
 
 const AppAuthorized = (props) => {
-	console.log('AppAuthorized props', props)
 	let history = useHistory();
 	let match = useRouteMatch();
 	useEffect(() => {

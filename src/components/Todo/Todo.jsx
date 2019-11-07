@@ -20,13 +20,12 @@ import ButtonGroup from "reactstrap/es/ButtonGroup";
 import expressGetUrl from "../../config/expressUrl";
 import expressWriteUrl from "../../config/expressWriteUrl";
 import todoTypesArr from "../../config/todoTypesArr";
-import {Switch, Route, useHistory, useRouteMatch} from "react-router-dom";
+import {useHistory, useRouteMatch} from "react-router-dom";
 
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
 
 export default ({token, setAuthorized}) => {
-	console.log('todo');
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());
@@ -41,7 +40,6 @@ export default ({token, setAuthorized}) => {
 	let history = useHistory();
 	let match = useRouteMatch();
 	const [sort, setSort] = useState();
-	console.log('todo match = ', match);
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -62,7 +60,6 @@ export default ({token, setAuthorized}) => {
 				setTodoObjHook(r);
 			})
 			.catch((err) => {
-				// console.log(err);
 				setAuthorized(err);
 			});
 
@@ -146,7 +143,6 @@ export default ({token, setAuthorized}) => {
 	const [type, typeSet] = useState(todoTypesArr[0])
 
 	const sortTodo = (by) => {
-		console.log('sortTodo by', by);
 		const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
 		let compareFn;
 		if (!by || by === sort)
@@ -162,7 +158,6 @@ export default ({token, setAuthorized}) => {
 				return (lowerLeft.localeCompare(lowerRight));
 			}
 		} else {
-			console.log('else в sortTodo')
 			return;
 		}
 		todoArr.sort(compareFn);
@@ -171,9 +166,7 @@ export default ({token, setAuthorized}) => {
 			return acc;
 		}
 		const result = todoArr.reduce(assembleObj, {});
-		console.log('result', result);
 		if (!(Object.keys(result).length === 0 && result.constructor === Object)) {
-			console.log('хрю');
 			setTodoObj(result);
 		}
 	}
@@ -191,7 +184,6 @@ export default ({token, setAuthorized}) => {
 
 
 	if (match.params.sort && match.params.sort !== sort) {
-		console.log(1);
 		sortTodo(match.params.sort);
 		setSort(match.params.sort);
 	}
