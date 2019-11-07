@@ -10,7 +10,7 @@ import Todo from '../Todo/Todo.jsx';
 import Calendar from '../Calendar/Calendar.jsx';
 
 const AppAuthorized = (props) => {
-	console.log('AppAuthorized')
+	console.log('AppAuthorized props', props)
 	let history = useHistory();
 	let match = useRouteMatch();
 	useEffect(() => {
@@ -32,7 +32,9 @@ const AppAuthorized = (props) => {
 				<Route exact path={`${match.path}/list`}>
 					<Todo {...props} />
 				</Route>
-				<Route path={`${match.path}/list/:sort`} render={(routeProps) => <Todo {...props} routeProps={routeProps} />}/>
+				<Route path={`${match.path}/list/:sort`}>
+					<Todo {...props} />
+				</Route>
 				<Route path={`${match.path}/calendar`}>
 					<Calendar {...props}/>
 				</Route>

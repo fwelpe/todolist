@@ -25,9 +25,8 @@ import {Switch, Route, useHistory, useRouteMatch} from "react-router-dom";
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
 
-export default ({token, isAuthorized, setAuthorized, routeProps}) => {
-	console.log('todo')
-	console.log(routeProps)
+export default ({token, setAuthorized}) => {
+	console.log('todo');
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());
@@ -41,6 +40,8 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 	const [todoObj, setTodoObjHook] = useState({});
 	let history = useHistory();
 	let match = useRouteMatch();
+	const [sort, setSort] = useState();
+	console.log('todo match = ', match);
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -131,7 +132,6 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 		reset();
 	};
 
-
 	const toggle = () => {
 		reset();
 		setModal(!modal);
@@ -146,10 +146,12 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 	const [type, typeSet] = useState(todoTypesArr[0])
 
 	const sortTodo = (by) => {
-		console.log(222);
+		console.log('sortTodo by', by);
 		const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
 		let compareFn;
-		if (by === 'time') {
+		if (!by || by === sort)
+			return;
+		else if (by === 'time') {
 			compareFn = (left, right) => {
 				return (new Date(left['date']) - new Date(right['date']));
 			}
@@ -159,13 +161,21 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 				const lowerRight = right.type.toLowerCase();
 				return (lowerLeft.localeCompare(lowerRight));
 			}
+		} else {
+			console.log('else в sortTodo')
+			return;
 		}
 		todoArr.sort(compareFn);
 		const assembleObj = (acc, val, index) => {
 			acc[index] = val;
 			return acc;
 		}
-		setTodoObj(todoArr.reduce(assembleObj, {}));
+		const result = todoArr.reduce(assembleObj, {});
+		console.log('result', result);
+		if (!(Object.keys(result).length === 0 && result.constructor === Object)) {
+			console.log('хрю');
+			setTodoObj(result);
+		}
 	}
 
 	const handleSelectInput = (currentInput, item) => {
@@ -179,63 +189,66 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 
 	const toggle2 = () => setOpen(!dropdownOpen);
 
-	if(routeProps && routeProps.match.params.sort)
+
+	if (match.params.sort && match.params.sort !== sort) {
 		console.log(1);
-		// sortTodo(routeProps.match.params.sort);
+		sortTodo(match.params.sort);
+		setSort(match.params.sort);
+	}
 
-		return (
-			<div className="todo-list">
-				<ButtonGroup>
-					<Button color="primary" onClick={toggle}>New Todo</Button>
-					<ButtonDropdown isOpen={dropdownOpen} toggle={toggle2}>
-						<DropdownToggle caret>
-							Sort list
-						</DropdownToggle>
-						<DropdownMenu>
-							<DropdownItem onClick={() => history.push(`${match.path}/time`)}>By time</DropdownItem>
-							<DropdownItem onClick={() => history.push(`${match.path}/type`)}>By type</DropdownItem>
-						</DropdownMenu>
-					</ButtonDropdown>
-				</ButtonGroup>
-				<Modal isOpen={modal} toggle={toggle}>
-					<ModalHeader toggle={toggle}>New Todo</ModalHeader>
-					<ModalBody>
-						<Form id='add' onSubmit={sbmt}>
-							<FormGroup>
-								<Label>Name</Label>
-								<Input type="text" value={todo} onChange={handleChangeTodo} required/>
-							</FormGroup>
-							<FormGroup>
-								<Label>Description (optional)</Label>
-								<Input type="text" value={desc} onChange={handleChangeDesc}/>
-							</FormGroup>
-							<FormGroup>
-								<Label for="exampleSelect">Type</Label>
-								<DataListInput required initialValue={type} items={todoTypes}
-											   onSelect={handleChangeType}
-											   match={handleSelectInput}/>
-							</FormGroup>
-							<FormGroup>
-								<Label>Deadline</Label>
-								<DateTimePicker required onChange={setDate} value={date}/>
-							</FormGroup>
-							<FormGroup check>
-								<Label check>
-									<Input type="checkbox" checked={important} onChange={toggleImportant}/>
-									Important
-								</Label>
-							</FormGroup>
-						</Form>
-					</ModalBody>
-					<ModalFooter>
-						<Button color="primary" form='add' type="submit">Submit</Button>
-						<Button color="secondary" onClick={toggle}>Cancel</Button>
-					</ModalFooter>
-				</Modal>
+	return (
+		<div className="todo-list">
+			<ButtonGroup>
+				<Button color="primary" onClick={toggle}>New Todo</Button>
+				<ButtonDropdown isOpen={dropdownOpen} toggle={toggle2}>
+					<DropdownToggle caret>
+						Sort list
+					</DropdownToggle>
+					<DropdownMenu>
+						<DropdownItem onClick={() => history.push(`/home/list/time`)}>By time</DropdownItem>
+						<DropdownItem onClick={() => history.push(`/home/list/type`)}>By type</DropdownItem>
+					</DropdownMenu>
+				</ButtonDropdown>
+			</ButtonGroup>
+			<Modal isOpen={modal} toggle={toggle}>
+				<ModalHeader toggle={toggle}>New Todo</ModalHeader>
+				<ModalBody>
+					<Form id='add' onSubmit={sbmt}>
+						<FormGroup>
+							<Label>Name</Label>
+							<Input type="text" value={todo} onChange={handleChangeTodo} required/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Description (optional)</Label>
+							<Input type="text" value={desc} onChange={handleChangeDesc}/>
+						</FormGroup>
+						<FormGroup>
+							<Label for="exampleSelect">Type</Label>
+							<DataListInput required initialValue={type} items={todoTypes}
+										   onSelect={handleChangeType}
+										   match={handleSelectInput}/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Deadline</Label>
+							<DateTimePicker required onChange={setDate} value={date}/>
+						</FormGroup>
+						<FormGroup check>
+							<Label check>
+								<Input type="checkbox" checked={important} onChange={toggleImportant}/>
+								Important
+							</Label>
+						</FormGroup>
+					</Form>
+				</ModalBody>
+				<ModalFooter>
+					<Button color="primary" form='add' type="submit">Submit</Button>
+					<Button color="secondary" onClick={toggle}>Cancel</Button>
+				</ModalFooter>
+			</Modal>
 
-				{Object.keys(todoObj).map((v) =>
-					<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo}
-							  changeTodo={changeTodo}/>)}
-			</div>
-		)
+			{Object.keys(todoObj).map((v) =>
+				<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo}
+						  changeTodo={changeTodo}/>)}
+		</div>
+	)
 }
