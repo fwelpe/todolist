@@ -6,6 +6,7 @@ import expressUrl from "../../config/expressUrl";
 import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 
 export default () => {
+	console.log('app');
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
 	const [authorizedStatus, setAuthorized] = useState();
 

@@ -10,12 +10,13 @@ import Todo from '../Todo/Todo.jsx';
 import Calendar from '../Calendar/Calendar.jsx';
 
 const AppAuthorized = (props) => {
+	console.log('AppAuthorized')
 	let history = useHistory();
 	let match = useRouteMatch();
 	useEffect(() => {
 		if (!props.isAuthorized)
 			history.push('/login');
-	})
+	});
 
 	return (
 		<div>
@@ -28,9 +29,10 @@ const AppAuthorized = (props) => {
 				<Route exact path={match.path}>
 					<Redirect to={`${match.path}/list`}/>
 				</Route>
-				<Route path={`${match.path}/list`}>
+				<Route exact path={`${match.path}/list`}>
 					<Todo {...props} />
 				</Route>
+				<Route path={`${match.path}/list/:sort`} render={(routeProps) => <Todo {...props} routeProps={routeProps} />}/>
 				<Route path={`${match.path}/calendar`}>
 					<Calendar {...props}/>
 				</Route>

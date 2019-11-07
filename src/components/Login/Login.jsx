@@ -5,6 +5,7 @@ import expressLoginUrl from "../../config/expressLoginUrl";
 import {useHistory} from "react-router-dom";
 
 export default (props) => {
+	console.log('login')
 	let history = useHistory();
 	const [user, setUser] = useState('');
 	const handleChangeUser = (event) => setUser(event.target.value)
