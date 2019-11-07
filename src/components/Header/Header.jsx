@@ -6,7 +6,6 @@ import openweatherIconUrl from "../../config/openweatherIconUrl";
 import './Header.css'
 
 export default () => {
-	console.log('header');
 	const [weatherText, setWeatherText] = useState('');
 	const [weatherIcon, setWeatherIcon] = useState('');
 

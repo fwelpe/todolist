@@ -26,8 +26,6 @@ import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
 
 export default ({token, isAuthorized, setAuthorized, routeProps}) => {
-	console.log('todo')
-	console.log(routeProps)
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());
@@ -41,6 +39,7 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 	const [todoObj, setTodoObjHook] = useState({});
 	let history = useHistory();
 	let match = useRouteMatch();
+	const [sortedBy, setSortedBy] = useState();
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -61,7 +60,6 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 				setTodoObjHook(r);
 			})
 			.catch((err) => {
-				// console.log(err);
 				setAuthorized(err);
 			});
 
@@ -71,6 +69,7 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 	}, [setAuthorized, token]);
 
 	const setTodoObj = (newObj) => {
+		console.log('set todoobj', newObj);
 		fetch(expressWriteUrl, {
 			headers: {
 				"Authorization": `Bearer ${token}`,
@@ -146,10 +145,9 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 	const [type, typeSet] = useState(todoTypesArr[0])
 
 	const sortTodo = (by) => {
-		console.log(222);
-		const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
+		console.log('sortTodo by', by)
 		let compareFn;
-		if (by === 'time') {
+if (by === 'time') {
 			compareFn = (left, right) => {
 				return (new Date(left['date']) - new Date(right['date']));
 			}
@@ -159,13 +157,20 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 				const lowerRight = right.type.toLowerCase();
 				return (lowerLeft.localeCompare(lowerRight));
 			}
+		} else {
+			return;
 		}
+		const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
 		todoArr.sort(compareFn);
 		const assembleObj = (acc, val, index) => {
 			acc[index] = val;
 			return acc;
 		}
-		setTodoObj(todoArr.reduce(assembleObj, {}));
+		setSortedBy(by);
+		const empty = {};
+		const result = todoArr.reduce(assembleObj, empty);
+		if (result !== empty)
+			setTodoObj(result);
 	}
 
 	const handleSelectInput = (currentInput, item) => {
@@ -179,10 +184,12 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 
 	const toggle2 = () => setOpen(!dropdownOpen);
 
-	if(routeProps && routeProps.match.params.sort)
-		console.log(1);
-		// sortTodo(routeProps.match.params.sort);
-
+	const Main = (props) => {
+		console.log('Main (in Todo) props = ', props);
+		if (props && props.match.params.sort) {
+			console.log('props && props.match.params.sort');
+			sortTodo(props.match.params.sort);
+		}
 		return (
 			<div className="todo-list">
 				<ButtonGroup>
@@ -238,4 +245,12 @@ export default ({token, isAuthorized, setAuthorized, routeProps}) => {
 							  changeTodo={changeTodo}/>)}
 			</div>
 		)
+	}
+
+	return (
+		<Switch>
+			<Route exact path={match.path} render={(props) => <Main {...props}/>}/>
+			<Route exact path={`${match.path}/:sort`} render={(props) => <Main {...props}/>}/>
+		</Switch>
+	);
 }
