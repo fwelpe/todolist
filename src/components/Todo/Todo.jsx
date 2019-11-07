@@ -25,7 +25,9 @@ import {Switch, Route, useHistory, useRouteMatch} from "react-router-dom";
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
 
-export default (props) => {
+export default ({token, isAuthorized, setAuthorized, routeProps}) => {
+	console.log('todo')
+	console.log(routeProps)
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());
@@ -46,12 +48,12 @@ export default (props) => {
 
 		fetch(expressGetUrl, {
 			headers: {
-				"Authorization": `Bearer ${props.token}`
+				"Authorization": `Bearer ${token}`
 			},
 			signal: signal
 		})
 			.then((r) => {
-				props.setAuthorized(r.status);
+				setAuthorized(r.status);
 				if (r.status === 200)
 					return r.json();
 			})
@@ -60,24 +62,24 @@ export default (props) => {
 			})
 			.catch((err) => {
 				// console.log(err);
-				props.setAuthorized(err);
+				setAuthorized(err);
 			});
 
 		return function () {
 			abortController.abort();
 		};
-	}, [props]);
+	}, [setAuthorized, token]);
 
 	const setTodoObj = (newObj) => {
 		fetch(expressWriteUrl, {
 			headers: {
-				"Authorization": `Bearer ${props.token}`,
+				"Authorization": `Bearer ${token}`,
 				"Content-Type": "application/json"
 			},
 			method: "POST",
 			body: JSON.stringify(newObj)
 		})
-			.then((r) => props.setAuthorized(r.status));
+			.then((r) => setAuthorized(r.status));
 
 		setTodoObjHook(newObj);
 	};
@@ -144,6 +146,7 @@ export default (props) => {
 	const [type, typeSet] = useState(todoTypesArr[0])
 
 	const sortTodo = (by) => {
+		console.log(222);
 		const todoArr = Object.keys(todoObj).map((v) => todoObj[v]);
 		let compareFn;
 		if (by === 'time') {
@@ -176,14 +179,11 @@ export default (props) => {
 
 	const toggle2 = () => setOpen(!dropdownOpen);
 
-	return (
-		<Switch>
-			<Route path={`${match.path}/time`}>
-				{sortTodo('time')}
-			</Route>
-			<Route path={`${match.path}/type`}>
-				{sortTodo('type')}
-			</Route>
+	if(routeProps && routeProps.match.params.sort)
+		console.log(1);
+		// sortTodo(routeProps.match.params.sort);
+
+		return (
 			<div className="todo-list">
 				<ButtonGroup>
 					<Button color="primary" onClick={toggle}>New Todo</Button>
@@ -237,6 +237,5 @@ export default (props) => {
 					<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo}
 							  changeTodo={changeTodo}/>)}
 			</div>
-		</Switch>
-	)
+		)
 }
