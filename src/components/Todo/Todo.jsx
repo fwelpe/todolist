@@ -20,6 +20,7 @@ import ButtonGroup from "reactstrap/es/ButtonGroup";
 import expressGetUrl from "../../config/expressUrl";
 import expressWriteUrl from "../../config/expressWriteUrl";
 import todoTypesArr from "../../config/todoTypesArr";
+import {Switch, Route, useHistory, useRouteMatch} from "react-router-dom";
 
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
@@ -36,6 +37,8 @@ export default (props) => {
 	const toggleImportant = () => setImportant(!important);
 	const [modal, setModal] = useState(false);
 	const [todoObj, setTodoObjHook] = useState({});
+	let history = useHistory();
+	let match = useRouteMatch();
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -174,57 +177,66 @@ export default (props) => {
 	const toggle2 = () => setOpen(!dropdownOpen);
 
 	return (
-		<div className="todo-list">
-			<ButtonGroup>
-				<Button color="primary" onClick={toggle}>New Todo</Button>
-				<ButtonDropdown isOpen={dropdownOpen} toggle={toggle2}>
-					<DropdownToggle caret>
-						Sort list
-					</DropdownToggle>
-					<DropdownMenu>
-						<DropdownItem onClick={() => sortTodo('time')}>By time</DropdownItem>
-						<DropdownItem onClick={() => sortTodo('type')}>By type</DropdownItem>
-					</DropdownMenu>
-				</ButtonDropdown>
-			</ButtonGroup>
-			<Modal isOpen={modal} toggle={toggle}>
-				<ModalHeader toggle={toggle}>New Todo</ModalHeader>
-				<ModalBody>
-					<Form id='add' onSubmit={sbmt}>
-						<FormGroup>
-							<Label>Name</Label>
-							<Input type="text" value={todo} onChange={handleChangeTodo} required/>
-						</FormGroup>
-						<FormGroup>
-							<Label>Description (optional)</Label>
-							<Input type="text" value={desc} onChange={handleChangeDesc}/>
-						</FormGroup>
-						<FormGroup>
-							<Label for="exampleSelect">Type</Label>
-							<DataListInput required initialValue={type} items={todoTypes} onSelect={handleChangeType}
-										   match={handleSelectInput}/>
-						</FormGroup>
-						<FormGroup>
-							<Label>Deadline</Label>
-							<DateTimePicker required onChange={setDate} value={date}/>
-						</FormGroup>
-						<FormGroup check>
-							<Label check>
-								<Input type="checkbox" checked={important} onChange={toggleImportant}/>
-								Important
-							</Label>
-						</FormGroup>
-					</Form>
-				</ModalBody>
-				<ModalFooter>
-					<Button color="primary" form='add' type="submit">Submit</Button>
-					<Button color="secondary" onClick={toggle}>Cancel</Button>
-				</ModalFooter>
-			</Modal>
+		<Switch>
+			<Route path={`${match.path}/time`}>
+				{sortTodo('time')}
+			</Route>
+			<Route path={`${match.path}/type`}>
+				{sortTodo('type')}
+			</Route>
+			<div className="todo-list">
+				<ButtonGroup>
+					<Button color="primary" onClick={toggle}>New Todo</Button>
+					<ButtonDropdown isOpen={dropdownOpen} toggle={toggle2}>
+						<DropdownToggle caret>
+							Sort list
+						</DropdownToggle>
+						<DropdownMenu>
+							<DropdownItem onClick={() => history.push(`${match.path}/time`)}>By time</DropdownItem>
+							<DropdownItem onClick={() => history.push(`${match.path}/type`)}>By type</DropdownItem>
+						</DropdownMenu>
+					</ButtonDropdown>
+				</ButtonGroup>
+				<Modal isOpen={modal} toggle={toggle}>
+					<ModalHeader toggle={toggle}>New Todo</ModalHeader>
+					<ModalBody>
+						<Form id='add' onSubmit={sbmt}>
+							<FormGroup>
+								<Label>Name</Label>
+								<Input type="text" value={todo} onChange={handleChangeTodo} required/>
+							</FormGroup>
+							<FormGroup>
+								<Label>Description (optional)</Label>
+								<Input type="text" value={desc} onChange={handleChangeDesc}/>
+							</FormGroup>
+							<FormGroup>
+								<Label for="exampleSelect">Type</Label>
+								<DataListInput required initialValue={type} items={todoTypes}
+											   onSelect={handleChangeType}
+											   match={handleSelectInput}/>
+							</FormGroup>
+							<FormGroup>
+								<Label>Deadline</Label>
+								<DateTimePicker required onChange={setDate} value={date}/>
+							</FormGroup>
+							<FormGroup check>
+								<Label check>
+									<Input type="checkbox" checked={important} onChange={toggleImportant}/>
+									Important
+								</Label>
+							</FormGroup>
+						</Form>
+					</ModalBody>
+					<ModalFooter>
+						<Button color="primary" form='add' type="submit">Submit</Button>
+						<Button color="secondary" onClick={toggle}>Cancel</Button>
+					</ModalFooter>
+				</Modal>
 
-			{Object.keys(todoObj).map((v) =>
-				<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo}
-						  changeTodo={changeTodo}/>)}
-		</div>
+				{Object.keys(todoObj).map((v) =>
+					<TodoItem key={v} id={v} item={todoObj[v]} changeDone={changeDone} delTodo={delTodo}
+							  changeTodo={changeTodo}/>)}
+			</div>
+		</Switch>
 	)
 }
