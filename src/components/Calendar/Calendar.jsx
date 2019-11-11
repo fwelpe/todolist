@@ -1,33 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import Calendar from 'react-calendar';
 import {VerticalTimeline, VerticalTimelineElement} from 'react-vertical-timeline-component';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFlag, faCheck, faAlignJustify} from '@fortawesome/free-solid-svg-icons';
 import {Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
 
-import expressUrl from "../../config/expressUrl";
 import './Calendar.css';
 
-export default (props) => {
+export default ({TodoObj}) => {
 	console.log('Calendar');
-	const [TodoObj, setTodoObjHook] = useState({});
 	let match = useRouteMatch();
 	let history = useHistory();
-
-
-	useEffect(() => {
-		fetch(expressUrl, {
-			headers: {
-				"Authorization": `Bearer ${props.token}`,
-				"Content-Type": "application/json"
-			}
-		})
-			.then((r) => r.json())
-			.then((r) => {
-				setTodoObjHook(r);
-			})
-			.catch((err) => console.error(err))
-	}, [props.token]);
 
 	const todoArr = Object.keys(TodoObj).map((v) => TodoObj[v]);
 

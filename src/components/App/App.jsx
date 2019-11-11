@@ -6,9 +6,9 @@ import expressUrl from "../../config/expressUrl";
 import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 
 export default () => {
-	console.log('App');
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
 	const [authorizedStatus, setAuthorized] = useState();
+	console.log('App; authorizedStatus = ', authorizedStatus);
 
 	useEffect(() => {
 		if (token) {
@@ -45,11 +45,6 @@ export default () => {
 				<Route path={'/home'}>
 					{!isAuthorized ? <Redirect to={'/'}/> : null}
 					<AppAuthorized token={token} setAuthorized={setAuthorized} isAuthorized={isAuthorized}/>
-				</Route>
-				<Route>
-					<h1 className={'text-center'}>
-						404
-					</h1>
 				</Route>
 			</Switch>
 		</BrowserRouter>

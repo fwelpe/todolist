@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
 	Label,
 	Input,
@@ -17,7 +17,6 @@ import {
 import DateTimePicker from 'react-datetime-picker';
 import DataListInput from 'react-datalist-input';
 import ButtonGroup from "reactstrap/es/ButtonGroup";
-import expressGetUrl from "../../config/expressUrl";
 import expressWriteUrl from "../../config/expressWriteUrl";
 import todoTypesArr from "../../config/todoTypesArr";
 import {useHistory, useRouteMatch} from "react-router-dom";
@@ -25,7 +24,8 @@ import {useHistory, useRouteMatch} from "react-router-dom";
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
 
-export default ({token, setAuthorized}) => {
+export default ({token, setAuthorized, todoObj, setTodoObjHook}) => {
+	console.log('Todo');
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());
@@ -36,31 +36,9 @@ export default ({token, setAuthorized}) => {
 	const [important, setImportant] = useState(false);
 	const toggleImportant = () => setImportant(!important);
 	const [modal, setModal] = useState(false);
-	const [todoObj, setTodoObjHook] = useState({});
 	let history = useHistory();
 	let match = useRouteMatch();
 	const [sort, setSort] = useState();
-
-	useEffect(() => {
-		fetch(expressGetUrl, {
-			headers: {
-				"Authorization": `Bearer ${token}`
-			}
-		})
-			.then((r) => {
-				console.log('Todo setting status', r.status);
-				setAuthorized(r.status);
-				if (r.status === 200)
-					return r.json();
-			})
-			.then((r) => {
-				console.log('Todo async success')
-				setTodoObjHook(r);
-			})
-			.catch((err) => {
-				setAuthorized(err);
-			});
-	}, [setAuthorized, token]);
 
 	const setTodoObj = (newObj) => {
 		fetch(expressWriteUrl, {
