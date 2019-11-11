@@ -42,30 +42,24 @@ export default ({token, setAuthorized}) => {
 	const [sort, setSort] = useState();
 
 	useEffect(() => {
-		const abortController = new AbortController();
-		const signal = abortController.signal;
-
 		fetch(expressGetUrl, {
 			headers: {
 				"Authorization": `Bearer ${token}`
-			},
-			signal: signal
+			}
 		})
 			.then((r) => {
+				console.log('Todo setting status', r.status);
 				setAuthorized(r.status);
 				if (r.status === 200)
 					return r.json();
 			})
 			.then((r) => {
+				console.log('Todo async success')
 				setTodoObjHook(r);
 			})
 			.catch((err) => {
 				setAuthorized(err);
 			});
-
-		return function () {
-			abortController.abort();
-		};
 	}, [setAuthorized, token]);
 
 	const setTodoObj = (newObj) => {

@@ -5,6 +5,7 @@ import expressLoginUrl from "../../config/expressLoginUrl";
 import {useHistory} from "react-router-dom";
 
 export default (props) => {
+	console.log('Login');
 	let history = useHistory();
 	const [user, setUser] = useState('');
 	const handleChangeUser = (event) => setUser(event.target.value)
@@ -14,8 +15,9 @@ export default (props) => {
 	const [btnClr, setBtnClr] = useState('secondary');
 
 	useEffect(() => {
-		if (props.isAuthorized)
+		if (props.isAuthorized) {
 			history.push('/home');
+		}
 	}, [history, props.isAuthorized]);
 
 	const sbmt = (event) => {
@@ -28,6 +30,7 @@ export default (props) => {
 			body: JSON.stringify({username: user, password: psw})
 		})
 			.then((r) => {
+				console.log('Login setting status', r.status);
 				props.setAuthorized(r.status);
 				if (r.status === 200)
 					return r.text();

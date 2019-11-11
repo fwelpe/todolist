@@ -6,6 +6,7 @@ import expressUrl from "../../config/expressUrl";
 import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 
 export default () => {
+	console.log('App');
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
 	const [authorizedStatus, setAuthorized] = useState();
 
@@ -17,6 +18,7 @@ export default () => {
 				}
 			})
 				.then((r) => {
+					console.log('App setting status', r.status);
 					setAuthorized(r.status);
 					if (r.status !== 200) {
 						setToken('');
@@ -28,22 +30,21 @@ export default () => {
 	const setToken = (tkn) => {
 		localStorage.setItem('token', tkn);
 		setTokenHook(tkn);
-	}
+	};
+
+	const isAuthorized = (authorizedStatus === 200) && !!token;
 
 	return (
 		<BrowserRouter>
 			<Header/>
 			<Switch>
 				<Route exact path={'/'}>
-					<Redirect to={'/login'}/>
+					<Login setToken={setToken} setAuthorized={setAuthorized} isAuthorized={isAuthorized}/>
 				</Route>
 
-				<Route path={'/login'} render={() => <Login setToken={setToken} setAuthorized={setAuthorized}
-															isAuthorized={((authorizedStatus === 200) && !!token)}/>}/>
-
 				<Route path={'/home'}>
-					<AppAuthorized token={token} setAuthorized={setAuthorized}
-								   isAuthorized={((authorizedStatus === 200) && !!token)}/>
+					{!isAuthorized ? <Redirect to={'/'}/> : null}
+					<AppAuthorized token={token} setAuthorized={setAuthorized} isAuthorized={isAuthorized}/>
 				</Route>
 				<Route>
 					<h1 className={'text-center'}>
