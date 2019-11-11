@@ -14,12 +14,6 @@ export default (props) => {
 	const [invalidInput, setInvalidInput] = useState(false);
 	const [btnClr, setBtnClr] = useState('secondary');
 
-	useEffect(() => {
-		if (props.isAuthorized) {
-			history.push('/home');
-		}
-	}, [history, props.isAuthorized]);
-
 	const sbmt = (event) => {
 		event.preventDefault();
 		fetch(expressLoginUrl, {

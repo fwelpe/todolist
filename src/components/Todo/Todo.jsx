@@ -24,7 +24,7 @@ import {useHistory, useRouteMatch} from "react-router-dom";
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
 
-export default ({token, setAuthorized, todoObj, setTodoObjHook}) => {
+export default ({token, todoObj, setTodoObjHook}) => {
 	console.log('Todo');
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
@@ -49,7 +49,6 @@ export default ({token, setAuthorized, todoObj, setTodoObjHook}) => {
 			method: "POST",
 			body: JSON.stringify(newObj)
 		})
-			.then((r) => setAuthorized(r.status));
 
 		setTodoObjHook(newObj);
 	};

@@ -14,7 +14,7 @@ const AppAuthorized = (props) => {
 	console.log('AppAuthorized');
 	let history = useHistory();
 	let match = useRouteMatch();
-	let {token, setAuthorized} = props;
+	let {token} = props;
 	const [todoObj, setTodoObjHook] = useState({});
 
 	useEffect(() => {
@@ -25,7 +25,6 @@ const AppAuthorized = (props) => {
 				}
 			})
 				.then((r) => {
-					setAuthorized(r.status);
 					if (r.status === 200)
 						return r.json();
 				})
@@ -33,11 +32,11 @@ const AppAuthorized = (props) => {
 					setTodoObjHook(r);
 				})
 				.catch((err) => {
-					setAuthorized(err);
+					console.log('err in main data read fetch', err);
 				});
 		}
 		inner();
-	}, [setAuthorized, token]);
+	}, [token]);
 
 	return (
 		<div>
