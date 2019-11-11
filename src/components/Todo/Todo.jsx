@@ -48,7 +48,7 @@ export default ({token, todoObj, setTodoObjHook}) => {
 			},
 			method: "POST",
 			body: JSON.stringify(newObj)
-		})
+		});
 
 		setTodoObjHook(newObj);
 	};
@@ -85,31 +85,31 @@ export default ({token, todoObj, setTodoObjHook}) => {
 	};
 
 	const newTodo = (newTodoItem) => {
-		const newTodoObj = {...todoObj}
+		const newTodoObj = {...todoObj};
 		const getNewIndex = () => {
-			const ids = Object.keys(newTodoObj)
+			const ids = Object.keys(newTodoObj);
 			const getIndex = (acc, val) => {
-				const numVal = Number(val)
+				const numVal = Number(val);
 				return numVal >= acc ? numVal + 1 : acc
-			}
+			};
 			return ids.reduce(getIndex, 0)
-		}
+		};
 		const newIndex = id ? id : getNewIndex();
 		newTodoObj[newIndex] = newTodoItem;
-		setTodoObj(newTodoObj)
+		setTodoObj(newTodoObj);
 		reset();
 	};
 
 	const toggle = () => {
 		reset();
 		setModal(!modal);
-	}
+	};
 
 	const sbmt = (event) => {
 		event.preventDefault();
 		newTodo({todo: todo, completed: false, type: type, date: date, desc: desc, important: important});
 		toggle();
-	}
+	};
 
 	const [type, typeSet] = useState(todoTypesArr[0])
 
@@ -135,24 +135,23 @@ export default ({token, todoObj, setTodoObjHook}) => {
 		const assembleObj = (acc, val, index) => {
 			acc[index] = val;
 			return acc;
-		}
+		};
 		const result = todoArr.reduce(assembleObj, {});
 		if (!(Object.keys(result).length === 0 && result.constructor === Object)) {
 			setTodoObj(result);
 		}
-	}
+	};
 
 	const handleSelectInput = (currentInput, item) => {
 		typeSet(currentInput);
 		return (item.label.substr(0, currentInput.length).toUpperCase() === currentInput.toUpperCase());
-	}
+	};
 
-	const handleChangeType = (event) => typeSet(event.label)
+	const handleChangeType = (event) => typeSet(event.label);
 
 	const [dropdownOpen, setOpen] = useState(false);
 
 	const toggle2 = () => setOpen(!dropdownOpen);
-
 
 	if (match.params.sort && match.params.sort !== sort) {
 		sortTodo(match.params.sort);

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import AppAuthorized from '../AppAuthorized/AppAuthorized.jsx';
 import Header from '../Header/Header.jsx';
 import expressUrl from "../../config/expressUrl";
-import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
+import {BrowserRouter, Route, Redirect} from "react-router-dom";
 import {Button, Form, FormGroup, Input, Label} from "reactstrap";
 import expressLoginUrl from "../../config/expressLoginUrl";
 
@@ -13,9 +13,9 @@ export default () => {
 	const [authorizedStatus, setAuthorized] = useState();
 	console.log('App; authorizedStatus = ', authorizedStatus);
 	const [user, setUser] = useState('');
-	const handleChangeUser = (event) => setUser(event.target.value)
+	const handleChangeUser = (event) => setUser(event.target.value);
 	const [psw, setPsw] = useState('');
-	const handleChangePsw = (event) => setPsw(event.target.value)
+	const handleChangePsw = (event) => setPsw(event.target.value);
 	const [invalidInput, setInvalidInput] = useState(false);
 	const [btnClr, setBtnClr] = useState('secondary');
 
@@ -35,7 +35,7 @@ export default () => {
 						}
 					})
 			}
-		}
+		};
 		inner();
 	}, [token]);
 
@@ -76,7 +76,7 @@ export default () => {
 			.catch((err) => {
 				console.error(err)
 			})
-	}
+	};
 
 	const isAuthorized = (authorizedStatus === 200) && !!token;
 
@@ -86,8 +86,7 @@ export default () => {
 		<BrowserRouter>
 			<Header/>
 			<Route exact path={'/'}>
-				{isAuthorized ? <Redirect to={'/home'}/> : null}
-				<div id="login" className="form-signin">
+				{isAuthorized ? <Redirect to={'/home'}/> : <div id="login" className="form-signin">
 					<Form onSubmit={sbmt}>
 						<FormGroup>
 							<Label for="login">Login</Label>
@@ -101,12 +100,12 @@ export default () => {
 						</FormGroup>
 						<Button color={btnClr} className={"btn btn-lg btn-primary btn-block"}>Submit</Button>
 					</Form>
-				</div>
+				</div>}
 			</Route>
 
 			<Route path={'/home'}>
-				{!isAuthorized ? <Redirect to={'/'}/> : null}
-				<AppAuthorized token={token} setAuthorized={setAuthorized} isAuthorized={isAuthorized}/>
+				{!isAuthorized ? <Redirect to={'/'}/> :
+					<AppAuthorized token={token} setAuthorized={setAuthorized} isAuthorized={isAuthorized}/>}
 			</Route>
 		</BrowserRouter>
 	)
