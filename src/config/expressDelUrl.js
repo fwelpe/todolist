@@ -1,3 +1,3 @@
 import expressUrl from './expressUrl'
 
-export default expressUrl + '/write';
+export default expressUrl + '/del';

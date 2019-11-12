@@ -34,9 +34,9 @@ export default () => {
 						setAuthorized(r.status);
 						if (r.status === 200)
 							return r.json();
-						else{
+						else {
 							setToken('');
-							setIsInitialized(true);
+							return {};
 						}
 					})
 					.then((r) => {
@@ -47,8 +47,9 @@ export default () => {
 						console.log('err in main data read fetch', err);
 						setIsInitialized(true);
 					});
+			} else {
+				setIsInitialized(true);
 			}
-			setIsInitialized(true);
 		}
 		inner();
 	}, [token]);
@@ -125,7 +126,5 @@ export default () => {
 				}
 			</Route>
 		</BrowserRouter>
-	) : <div id="loader">
-			<CircularProgress />
-		</div>
+	) : <div id="loader"><CircularProgress /></div>
 }

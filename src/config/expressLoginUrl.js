@@ -1,1 +1,3 @@
-export default 'http://localhost:3001/login';
+import expressUrl from './expressUrl'
+
+export default expressUrl + '/login';
