@@ -37,12 +37,18 @@ const AppAuthorized = ({token}) => {
 		inner();
 	}, [token]);
 
+	const showList = () => history.push(`${match.path}/list`);
+	const showCalendar = () => history.push(`${match.path}/calendar`);
+
 	return (
 		<div>
 			<div className="mainBtns">
-				<Button onClick={() => history.push(`${match.path}/list`)}><FontAwesomeIcon icon={faList}/></Button>
-				<Button onClick={() => history.push(`${match.path}/calendar`)}><FontAwesomeIcon
-					icon={faCalendarAlt}/></Button>
+				<Button onClick={showList}>
+					<FontAwesomeIcon icon={faList}/>
+				</Button>
+				<Button onClick={showCalendar}>
+					<FontAwesomeIcon icon={faCalendarAlt}/>
+				</Button>
 			</div>
 			<Route exact path={match.path}>
 				<Redirect to={`${match.path}/list`}/>
