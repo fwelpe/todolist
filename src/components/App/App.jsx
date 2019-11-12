@@ -5,6 +5,7 @@ import expressGetUrl from "../../config/expressUrl";
 import {BrowserRouter, Route, Redirect} from "react-router-dom";
 import {Button, Form, FormGroup, Input, Label} from "reactstrap";
 import expressLoginUrl from "../../config/expressLoginUrl";
+import {CircularProgress} from "@material-ui/core";
 
 import './App.css';
 
@@ -19,6 +20,7 @@ export default () => {
 	const [invalidInput, setInvalidInput] = useState(false);
 	const [btnClr, setBtnClr] = useState('secondary');
 	const [todoObj, setTodoObjHook] = useState({});
+	const [isInitialized, setIsInitialized] = useState(false);
 
 	useEffect(() => {
 		const inner = async () => {
@@ -37,35 +39,16 @@ export default () => {
 					})
 					.then((r) => {
 						setTodoObjHook(r);
+						setIsInitialized(true);
 					})
 					.catch((err) => {
 						console.log('err in main data read fetch', err);
+						setIsInitialized(true);
 					});
 			}
 		}
 		inner();
 	}, [token]);
-
-
-	// useEffect(() => {
-	// 	const inner = async () => {
-	// 		if (token) {
-	// 			await fetch(expressUrl, {
-	// 				headers: {
-	// 					"Authorization": `Bearer ${token}`
-	// 				}
-	// 			})
-	// 				.then((r) => {
-	// 					console.log('App setting status', r.status);
-	// 					setAuthorized(r.status);
-	// 					if (r.status !== 200) {
-	// 						setToken('');
-	// 					}
-	// 				})
-	// 		}
-	// 	};
-	// 	inner();
-	// }, [token]);
 
 	const setToken = (tkn) => {
 		localStorage.setItem('token', tkn);
@@ -102,13 +85,14 @@ export default () => {
 				}
 			})
 			.catch((err) => {
-				console.error(err)
+				setAuthorized(err);
+				console.error(err);
 			})
 	};
 
 	const isAuthorized = (authorizedStatus === 200) && !!token;
 
-	return (
+	return isInitialized ? (
 		<BrowserRouter>
 			<Header/>
 			<Route exact path={'/'}>
@@ -125,7 +109,8 @@ export default () => {
 								<Input invalid={invalidInput} type="password" id="psw" placeholder="Password"
 									   value={psw} onChange={handleChangePsw} required/>
 							</FormGroup>
-							<Button color={btnClr} className={"btn btn-lg btn-primary btn-block"}>Submit</Button>
+							<Button color={btnClr}
+									className={"btn btn-lg btn-primary btn-block"}>Submit</Button>
 						</Form>
 					</div>
 				}
@@ -137,5 +122,5 @@ export default () => {
 				}
 			</Route>
 		</BrowserRouter>
-	)
+	) : <CircularProgress/>
 }
