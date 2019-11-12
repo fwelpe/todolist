@@ -10,11 +10,10 @@ import Todo from '../Todo/Todo.jsx';
 import Calendar from '../Calendar/Calendar.jsx';
 import expressGetUrl from "../../config/expressUrl";
 
-const AppAuthorized = (props) => {
+const AppAuthorized = ({token}) => {
 	console.log('AppAuthorized');
 	let history = useHistory();
 	let match = useRouteMatch();
-	let {token} = props;
 	const [todoObj, setTodoObjHook] = useState({});
 
 	useEffect(() => {
@@ -50,15 +49,15 @@ const AppAuthorized = (props) => {
 			</Route>
 
 			<Route exact path={`${match.path}/list`}>
-				<Todo {...props} todoObj={todoObj} setTodoObjHook={setTodoObjHook}/>
+				<Todo token={token} todoObj={todoObj} setTodoObjHook={setTodoObjHook}/>
 			</Route>
 
 			<Route path={`${match.path}/list/:sort`}>
-				<Todo {...props} todoObj={todoObj} setTodoObjHook={setTodoObjHook}/>
+				<Todo token={token} todoObj={todoObj} setTodoObjHook={setTodoObjHook}/>
 			</Route>
 
 			<Route path={`${match.path}/calendar`}>
-				<Calendar {...props} TodoObj={todoObj}/>
+				<Calendar token={token} TodoObj={todoObj}/>
 			</Route>
 		</div>
 	)

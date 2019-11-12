@@ -80,32 +80,33 @@ export default () => {
 
 	const isAuthorized = (authorizedStatus === 200) && !!token;
 
-	console.log('App isAuthorized is', isAuthorized);
-
 	return (
 		<BrowserRouter>
 			<Header/>
 			<Route exact path={'/'}>
-				{isAuthorized ? <Redirect to={'/home'}/> : <div id="login" className="form-signin">
-					<Form onSubmit={sbmt}>
-						<FormGroup>
-							<Label for="login">Login</Label>
-							<Input invalid={invalidInput} type="text" id="login" placeholder="Login"
-								   value={user} onChange={handleChangeUser} required/>
-						</FormGroup>
-						<FormGroup>
-							<Label for="psw">Password</Label>
-							<Input invalid={invalidInput} type="password" id="psw" placeholder="Password"
-								   value={psw} onChange={handleChangePsw} required/>
-						</FormGroup>
-						<Button color={btnClr} className={"btn btn-lg btn-primary btn-block"}>Submit</Button>
-					</Form>
-				</div>}
+				{isAuthorized ? <Redirect to={'/home'}/> :
+					<div id="login" className="form-signin">
+						<Form onSubmit={sbmt}>
+							<FormGroup>
+								<Label for="login">Login</Label>
+								<Input invalid={invalidInput} type="text" id="login" placeholder="Login"
+									   value={user} onChange={handleChangeUser} required/>
+							</FormGroup>
+							<FormGroup>
+								<Label for="psw">Password</Label>
+								<Input invalid={invalidInput} type="password" id="psw" placeholder="Password"
+									   value={psw} onChange={handleChangePsw} required/>
+							</FormGroup>
+							<Button color={btnClr} className={"btn btn-lg btn-primary btn-block"}>Submit</Button>
+						</Form>
+					</div>
+				}
 			</Route>
 
 			<Route path={'/home'}>
 				{!isAuthorized ? <Redirect to={'/'}/> :
-					<AppAuthorized token={token} setAuthorized={setAuthorized} isAuthorized={isAuthorized}/>}
+					<AppAuthorized token={token}/>
+				}
 			</Route>
 		</BrowserRouter>
 	)

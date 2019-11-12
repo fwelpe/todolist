@@ -25,12 +25,12 @@ export default ({TodoObj}) => {
 				if ((todoDateObj.getDate() === calendarDate) && (todoDateObj.getMonth() === calendarMonth) &&
 					todoDateObj.getYear() === calendarYear)
 					arr.push(todo);
-			})
+			});
 			const str = arr.join('; ');
 			const resStr = str.length > 19 ? str.substr(0, 16) + '...' : str;
 			return (<p>{resStr}</p>)
 		}
-	}
+	};
 
 	const compare = (time1, time2) => {
 		const obj1 = new Date(time1);
@@ -53,7 +53,7 @@ export default ({TodoObj}) => {
 	const onClickDayFn = (value) => {
 		if (getDayTodo(value).length)
 			history.push(`/home/calendar/${value}`);
-	}
+	};
 
 	const getVTline = (props) => {
 		const dayTodo = getDayTodo(props.match.params.day);
@@ -79,7 +79,7 @@ export default ({TodoObj}) => {
 			</VerticalTimelineElement>
 		});
 		return (<VerticalTimeline>{dayTodoJSX}</VerticalTimeline>)
-	}
+	};
 
 	return (
 		<Switch>
