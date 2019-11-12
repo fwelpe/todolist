@@ -5,7 +5,7 @@ import openweatherIconUrl from "../../config/openweatherIconUrl";
 
 import './Header.css'
 
-export default () => {
+export default ({isAuthorized}) => {
 	const [weatherText, setWeatherText] = useState('');
 	const [weatherIcon, setWeatherIcon] = useState('');
 
@@ -17,18 +17,19 @@ export default () => {
 				setWeatherText(row);
 				setWeatherIcon(openweatherIconUrl[0] + r.weather[0].icon + openweatherIconUrl[1]);
 			})
-	}, [])
+	}, []);
 	return (
 		<div className="header navbar">
-				<div id={'title'}>
-					TodoList
+			<div id={'title'}>
+				TodoList
+			</div>
+			{isAuthorized ?
+			<div id={'weather'}>
+				<div className="temp">
+					{weatherText}
 				</div>
-				<div id={'weather'}>
-					<div className="temp">
-						{weatherText}
-					</div>
-					<Img className="icon" src={weatherIcon}/>
-				</div>
+				<Img className="icon" src={weatherIcon}/>
+			</div> : null}
 		</div>
 	)
 }

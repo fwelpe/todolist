@@ -34,8 +34,10 @@ export default () => {
 						setAuthorized(r.status);
 						if (r.status === 200)
 							return r.json();
-						else
+						else{
 							setToken('');
+							setIsInitialized(true);
+						}
 					})
 					.then((r) => {
 						setTodoObjHook(r);
@@ -46,6 +48,7 @@ export default () => {
 						setIsInitialized(true);
 					});
 			}
+			setIsInitialized(true);
 		}
 		inner();
 	}, [token]);
@@ -94,7 +97,7 @@ export default () => {
 
 	return isInitialized ? (
 		<BrowserRouter>
-			<Header/>
+			<Header isAuthorized={isAuthorized}/>
 			<Route exact path={'/'}>
 				{isAuthorized ? <Redirect to={'/home'}/> :
 					<div id="login" className="form-signin">
@@ -122,5 +125,7 @@ export default () => {
 				}
 			</Route>
 		</BrowserRouter>
-	) : <CircularProgress/>
+	) : <div id="loader">
+			<CircularProgress />
+		</div>
 }
