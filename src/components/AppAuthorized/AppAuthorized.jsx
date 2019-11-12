@@ -8,34 +8,11 @@ import './AppAuthorized.css';
 
 import Todo from '../Todo/Todo.jsx';
 import Calendar from '../Calendar/Calendar.jsx';
-import expressGetUrl from "../../config/expressUrl";
 
-const AppAuthorized = ({token}) => {
+const AppAuthorized = ({token, todoObj, setTodoObjHook}) => {
 	console.log('AppAuthorized');
 	let history = useHistory();
 	let match = useRouteMatch();
-	const [todoObj, setTodoObjHook] = useState({});
-
-	useEffect(() => {
-		const inner = async () => {
-			await fetch(expressGetUrl, {
-				headers: {
-					"Authorization": `Bearer ${token}`
-				}
-			})
-				.then((r) => {
-					if (r.status === 200)
-						return r.json();
-				})
-				.then((r) => {
-					setTodoObjHook(r);
-				})
-				.catch((err) => {
-					console.log('err in main data read fetch', err);
-				});
-		}
-		inner();
-	}, [token]);
 
 	const showList = () => history.push(`${match.path}/list`);
 	const showCalendar = () => history.push(`${match.path}/calendar`);

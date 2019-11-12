@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import AppAuthorized from '../AppAuthorized/AppAuthorized.jsx';
 import Header from '../Header/Header.jsx';
-import expressUrl from "../../config/expressUrl";
+import expressGetUrl from "../../config/expressUrl";
 import {BrowserRouter, Route, Redirect} from "react-router-dom";
 import {Button, Form, FormGroup, Input, Label} from "reactstrap";
 import expressLoginUrl from "../../config/expressLoginUrl";
@@ -18,26 +18,54 @@ export default () => {
 	const handleChangePsw = (event) => setPsw(event.target.value);
 	const [invalidInput, setInvalidInput] = useState(false);
 	const [btnClr, setBtnClr] = useState('secondary');
+	const [todoObj, setTodoObjHook] = useState({});
 
 	useEffect(() => {
 		const inner = async () => {
 			if (token) {
-				await fetch(expressUrl, {
+				await fetch(expressGetUrl, {
 					headers: {
 						"Authorization": `Bearer ${token}`
 					}
 				})
 					.then((r) => {
-						console.log('App setting status', r.status);
 						setAuthorized(r.status);
-						if (r.status !== 200) {
+						if (r.status === 200)
+							return r.json();
+						else
 							setToken('');
-						}
 					})
+					.then((r) => {
+						setTodoObjHook(r);
+					})
+					.catch((err) => {
+						console.log('err in main data read fetch', err);
+					});
 			}
-		};
+		}
 		inner();
 	}, [token]);
+
+
+	// useEffect(() => {
+	// 	const inner = async () => {
+	// 		if (token) {
+	// 			await fetch(expressUrl, {
+	// 				headers: {
+	// 					"Authorization": `Bearer ${token}`
+	// 				}
+	// 			})
+	// 				.then((r) => {
+	// 					console.log('App setting status', r.status);
+	// 					setAuthorized(r.status);
+	// 					if (r.status !== 200) {
+	// 						setToken('');
+	// 					}
+	// 				})
+	// 		}
+	// 	};
+	// 	inner();
+	// }, [token]);
 
 	const setToken = (tkn) => {
 		localStorage.setItem('token', tkn);
@@ -105,7 +133,7 @@ export default () => {
 
 			<Route path={'/home'}>
 				{!isAuthorized ? <Redirect to={'/'}/> :
-					<AppAuthorized token={token}/>
+					<AppAuthorized token={token} todoObj={todoObj} setTodoObjHook={setTodoObjHook}/>
 				}
 			</Route>
 		</BrowserRouter>
