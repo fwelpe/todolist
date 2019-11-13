@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import AppAuthorized from '../AppAuthorized/AppAuthorized.jsx';
 import Header from '../Header/Header.jsx';
 import expressGetUrl from "../../config/expressUrl";
@@ -6,7 +6,7 @@ import {BrowserRouter, Route, Redirect} from "react-router-dom";
 import {Button, Form, FormGroup, Input, Label} from "reactstrap";
 import expressLoginUrl from "../../config/expressLoginUrl";
 import {CircularProgress} from "@material-ui/core";
-import AuthProvider, {AuthContext} from '../Auth/Auth.jsx';
+import {useAuth} from '../Auth/Auth.jsx'
 
 import './App.css';
 
@@ -22,37 +22,36 @@ export default () => {
 	const [btnClr, setBtnClr] = useState('secondary');
 	const [todoObj, setTodoObjHook] = useState({});
 	const [isInitialized, setIsInitialized] = useState(false);
-	// const auth = useAuth();
-	const {getTodoObj} = useContext(AuthContext);
+	const auth = useAuth();
+	const cbk = useCallback(() => {
+		return auth.getTodoObj(token)
+			.then((r) => {
+				setAuthorized(r.status);
+				if (r.status === 200)
+					return r.json();
+				else {
+					setToken('');
+					return {};
+				}
+			})
+			.then((r) => {
+				setTodoObjHook(r);
+				setIsInitialized(true);
+			})
+			.catch((err) => {
+				console.log('err in main data read fetch', err);
+				setIsInitialized(true);
+			})
+	}, []);
 
 	useEffect(() => {
-		// console.log(auth);
-		const inner = async () => {
-			if (token) {
-				debugger
-				await getTodoObj(token)
-					.then((r) => {
-						setAuthorized(r.status);
-						if (r.status === 200)
-							return r.json();
-						else {
-							setToken('');
-							return {};
-						}
-					})
-					.then((r) => {
-						setTodoObjHook(r);
-						setIsInitialized(true);
-					})
-					.catch((err) => {
-						console.log('err in main data read fetch', err);
-						setIsInitialized(true);
-					});
-			} else {
-				setIsInitialized(true);
-			}
+
+		if (token) {
+			cbk();
+		} else {
+			setIsInitialized(true);
 		}
-		inner();
+		;
 	}, [token]);
 
 	const setToken = (tkn) => {
@@ -98,7 +97,6 @@ export default () => {
 	const isAuthorized = (authorizedStatus === 200) && !!token;
 
 	return isInitialized ? (
-		<AuthProvider>
 		<BrowserRouter>
 			<Header isAuthorized={isAuthorized}/>
 			<Route exact path={'/'}>
@@ -128,6 +126,5 @@ export default () => {
 				}
 			</Route>
 		</BrowserRouter>
-		</AuthProvider>
 	) : <div id="loader"><CircularProgress/></div>
 }
