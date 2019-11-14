@@ -25,7 +25,6 @@ import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
 
 export default ({token, todoObj, setTodoObjHook}) => {
-	console.log('Todo');
 	const [todo, todoSet] = useState('');
 	const [desc, descSet] = useState('');
 	const [date, setDate] = useState(new Date());

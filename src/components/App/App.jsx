@@ -11,7 +11,6 @@ import './App.css';
 export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
 	const [authorizedStatus, setAuthorized] = useState();
-	console.log('App; authorizedStatus = ', authorizedStatus);
 	const [username, setUsername] = useState('');
 	const handleChangeUsername = (event) => setUsername(event.target.value);
 	const [password, setPassword] = useState('');
@@ -39,7 +38,6 @@ export default () => {
 					setIsInitialized(true);
 				})
 				.catch((err) => {
-					console.log('err in main data read fetch', err);
 					setIsInitialized(true);
 				});
 		} else {
@@ -56,7 +54,6 @@ export default () => {
 		event.preventDefault();
 		todoService.login(username, password)
 			.then((r) => {
-				console.log('Login setting status', r.status);
 				setAuthorized(r.status);
 				if (r.status === 200)
 					return r.text();

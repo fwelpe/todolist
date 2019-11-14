@@ -10,7 +10,6 @@ import Todo from '../Todo/Todo.jsx';
 import Calendar from '../Calendar/Calendar.jsx';
 
 const AppAuthorized = ({token, todoObj, setTodoObjHook}) => {
-	console.log('AppAuthorized');
 	let history = useHistory();
 	let match = useRouteMatch();
 

@@ -8,7 +8,6 @@ import {Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
 import './Calendar.css';
 
 export default ({TodoObj}) => {
-	console.log('Calendar');
 	let match = useRouteMatch();
 	let history = useHistory();
 
