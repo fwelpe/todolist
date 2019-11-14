@@ -17,10 +17,9 @@ import {
 import DateTimePicker from 'react-datetime-picker';
 import DataListInput from 'react-datalist-input';
 import ButtonGroup from "reactstrap/es/ButtonGroup";
-import expressWriteUrl from "../../config/expressWriteUrl";
-import expressDelUrl from "../../config/expressDelUrl";
 import todoTypesArr from "../../config/todoTypesArr";
 import {useHistory, useRouteMatch} from "react-router-dom";
+import {useAuth} from "../Auth/Auth";
 
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
@@ -40,17 +39,10 @@ export default ({token, todoObj, setTodoObjHook}) => {
 	let history = useHistory();
 	let match = useRouteMatch();
 	const [sort, setSort] = useState();
+	const auth = useAuth();
 
 	const setTodoObj = (newObj) => {
-		fetch(expressWriteUrl, {
-			headers: {
-				"Authorization": `Bearer ${token}`,
-				"Content-Type": "application/json"
-			},
-			method: "POST",
-			body: JSON.stringify(newObj)
-		});
-
+		auth.setTodoObj(token, newObj);
 		setTodoObjHook(newObj);
 	};
 
@@ -61,14 +53,7 @@ export default ({token, todoObj, setTodoObjHook}) => {
 	};
 
 	const delTodo = (id) => {
-		fetch(expressDelUrl, {
-			headers: {
-				"Authorization": `Bearer ${token}`,
-				"Content-Type": "application/json"
-			},
-			method: "POST",
-			body: JSON.stringify({id: id})
-		});
+		auth.delTodo(token, id);
 		let newTodoObj = {...todoObj};
 		delete newTodoObj[id];
 		setTodoObjHook(newTodoObj);
