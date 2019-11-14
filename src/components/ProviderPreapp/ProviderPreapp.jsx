@@ -1,9 +1,9 @@
 import React from 'react';
-import {AuthProvider} from "../Auth/Auth";
+import {TodoServiceProvider} from "../TodoService/TodoService";
 import App from '../App/App.jsx';
 
 export default () => {
 	return (
-		<AuthProvider children={<App/>}/>
+		<TodoServiceProvider children={<App/>}/>
 	)
 }

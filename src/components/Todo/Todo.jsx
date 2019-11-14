@@ -19,7 +19,7 @@ import DataListInput from 'react-datalist-input';
 import ButtonGroup from "reactstrap/es/ButtonGroup";
 import todoTypesArr from "../../config/todoTypesArr";
 import {useHistory, useRouteMatch} from "react-router-dom";
-import {useAuth} from "../Auth/Auth";
+import {useTodoService} from "../TodoService/TodoService";
 
 import TodoItem from '../TodoItem/TodoItem.jsx';
 import './Todo.css';
@@ -39,11 +39,11 @@ export default ({token, todoObj, setTodoObjHook}) => {
 	let history = useHistory();
 	let match = useRouteMatch();
 	const [sort, setSort] = useState();
-	const auth = useAuth();
+	const todoService = useTodoService();
 
 	const setTodoObj = (newObj) => {
-		auth.setTodoObj(token, newObj);
-		setTodoObjHook(newObj);
+		if (todoService.setTodoObj(token, newObj))
+			setTodoObjHook(newObj);
 	};
 
 	const changeDone = (id) => {
@@ -53,10 +53,11 @@ export default ({token, todoObj, setTodoObjHook}) => {
 	};
 
 	const delTodo = (id) => {
-		auth.delTodo(token, id);
-		let newTodoObj = {...todoObj};
-		delete newTodoObj[id];
-		setTodoObjHook(newTodoObj);
+		if (todoService.delTodo(token, id)) {
+			let newTodoObj = {...todoObj};
+			delete newTodoObj[id];
+			setTodoObjHook(newTodoObj)
+		}
 	};
 
 	const changeTodo = (item, id) => {

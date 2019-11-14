@@ -3,9 +3,8 @@ import AppAuthorized from '../AppAuthorized/AppAuthorized.jsx';
 import Header from '../Header/Header.jsx';
 import {BrowserRouter, Route, Redirect} from "react-router-dom";
 import {Button, Form, FormGroup, Input, Label} from "reactstrap";
-import expressLoginUrl from "../../config/expressLoginUrl";
 import {CircularProgress} from "@material-ui/core";
-import {useAuth} from '../Auth/Auth.jsx';
+import {useTodoService} from '../TodoService/TodoService.jsx';
 
 import './App.css';
 
@@ -13,19 +12,19 @@ export default () => {
 	const [token, setTokenHook] = useState(localStorage.getItem('token'));
 	const [authorizedStatus, setAuthorized] = useState();
 	console.log('App; authorizedStatus = ', authorizedStatus);
-	const [user, setUser] = useState('');
-	const handleChangeUser = (event) => setUser(event.target.value);
-	const [psw, setPsw] = useState('');
-	const handleChangePsw = (event) => setPsw(event.target.value);
+	const [username, setUsername] = useState('');
+	const handleChangeUsername = (event) => setUsername(event.target.value);
+	const [password, setPassword] = useState('');
+	const handleChangePassword = (event) => setPassword(event.target.value);
 	const [invalidInput, setInvalidInput] = useState(false);
-	const [btnClr, setBtnClr] = useState('secondary');
+	const [buttonColor, setButtonColor] = useState('secondary');
 	const [todoObj, setTodoObjHook] = useState({});
 	const [isInitialized, setIsInitialized] = useState(false);
-	const auth = useAuth();
+	const todoService = useTodoService();
 
 	useEffect(() => {
 		if (token) {
-			auth.getTodoObj(token)
+			todoService.getTodoObj(token)
 				.then((r) => {
 					setAuthorized(r.status);
 					if (r.status === 200)
@@ -46,22 +45,16 @@ export default () => {
 		} else {
 			setIsInitialized(true);
 		}
-	}, [token, auth]);
+	}, [token, todoService]);
 
 	const setToken = (tkn) => {
 		localStorage.setItem('token', tkn);
 		setTokenHook(tkn);
 	};
 
-	const sbmt = (event) => {
+	const submit = (event) => {
 		event.preventDefault();
-		fetch(expressLoginUrl, {
-			headers: {
-				"Content-Type": "application/json"
-			},
-			method: "POST",
-			body: JSON.stringify({username: user, password: psw})
-		})
+		todoService.login(username, password)
 			.then((r) => {
 				console.log('Login setting status', r.status);
 				setAuthorized(r.status);
@@ -69,10 +62,10 @@ export default () => {
 					return r.text();
 				else {
 					setInvalidInput(true);
-					setBtnClr('danger');
+					setButtonColor('danger');
 					setTimeout(() => {
 						setInvalidInput(false);
-						setBtnClr('secondary');
+						setButtonColor('secondary');
 					}, 2000);
 					setToken('');
 				}
@@ -84,7 +77,6 @@ export default () => {
 			})
 			.catch((err) => {
 				setAuthorized(err);
-				console.error(err);
 			})
 	};
 
@@ -96,18 +88,18 @@ export default () => {
 			<Route exact path={'/'}>
 				{isAuthorized ? <Redirect to={'/home'}/> :
 					<div id="login" className="form-signin">
-						<Form onSubmit={sbmt}>
+						<Form onSubmit={submit}>
 							<FormGroup>
 								<Label for="login">Login</Label>
 								<Input invalid={invalidInput} type="text" id="login" placeholder="Login"
-									   value={user} onChange={handleChangeUser} required/>
+									   value={username} onChange={handleChangeUsername} required/>
 							</FormGroup>
 							<FormGroup>
 								<Label for="psw">Password</Label>
 								<Input invalid={invalidInput} type="password" id="psw" placeholder="Password"
-									   value={psw} onChange={handleChangePsw} required/>
+									   value={password} onChange={handleChangePassword} required/>
 							</FormGroup>
-							<Button color={btnClr}
+							<Button color={buttonColor}
 									className={"btn btn-lg btn-primary btn-block"}>Login</Button>
 						</Form>
 					</div>
