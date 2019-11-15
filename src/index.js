@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Preapp from './components/ProviderPreapp/ProviderPreapp.jsx';
 import * as serviceWorker from './serviceWorker';
 
-import './css/bootstrap.css';
+import 'bootstrap-css-only/css/bootstrap.css';
 
 ReactDOM.render(<Preapp />, document.getElementById('root'));
 
