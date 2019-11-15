@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Img from 'react-image';
 import openweatherUrl from "../../config/openweatherUrl";
-import openweatherIconUrl from "../../config/openweatherIconUrl";
+import getOpenweatherIconUrl from "../../config/openweatherIconUrl";
 
 import './Header.css'
 
@@ -16,7 +16,7 @@ export default ({isAuthorized}) => {
 				.then((r) => {
 					const row = r.main.temp + ' °C';
 					setWeatherText(row);
-					setWeatherIcon(openweatherIconUrl[0] + r.weather[0].icon + openweatherIconUrl[1]);
+					setWeatherIcon(getOpenweatherIconUrl(r.weather[0].icon));
 				})
 		}
 	}, [isAuthorized]);
