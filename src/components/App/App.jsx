@@ -16,7 +16,6 @@ export default () => {
 	const [password, setPassword] = useState('');
 	const handleChangePassword = (event) => setPassword(event.target.value);
 	const [invalidInput, setInvalidInput] = useState(false);
-	const [buttonColor, setButtonColor] = useState('secondary');
 	const [todoObj, setTodoObjHook] = useState({});
 	const [isInitialized, setIsInitialized] = useState(false);
 	const todoService = useTodoService();
@@ -59,10 +58,8 @@ export default () => {
 					return r.text();
 				else {
 					setInvalidInput(true);
-					setButtonColor('danger');
 					setTimeout(() => {
 						setInvalidInput(false);
-						setButtonColor('secondary');
 					}, 2000);
 					setToken('');
 				}
@@ -96,7 +93,7 @@ export default () => {
 								<Input invalid={invalidInput} type="password" id="psw" placeholder="Password"
 									   value={password} onChange={handleChangePassword} required/>
 							</FormGroup>
-							<Button color={buttonColor}
+							<Button color={invalidInput ? 'danger' : 'secondary'}
 									className={"btn btn-lg btn-primary btn-block"}>Login</Button>
 						</Form>
 					</div>
